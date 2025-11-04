@@ -256,7 +256,7 @@ function App() {
                 id="file-upload"
                 className="hidden"
                 onChange={handleFileChange}
-                accept=".html,.htm,.jpg,.jpeg,.png,.pdf"
+                accept=".html,.htm,.jpg,.jpeg,.png,.pdf,.docx"
               />
               
               <label
