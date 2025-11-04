@@ -1,0 +1,795 @@
+{
+  "id": "b24c6493-639a-468a-a7ea-c2a3f30a1262",
+  "fileName": "UAT_testing.html",
+  "fileType": "html",
+  "status": "completed",
+  "extractedText": "Emirates NBD Last week is brought good news on the economy, US infltion, earngks, and finally trade View in browser CIF: [Field: Customer CIF - Masked] Dear [Field: First Name] [Field: LastName], &bull; Last week brought good news on the economy, US inflation, earnings, and finally trade &bull; All major asset classes benefitted, except gold which saw significant profit taking &bull; Our positioning is unchanged. We remain overweight gold despite the risk of more turbulence in the short term Tur",
+  "language": "eng",
+  "languages": [
+    "eng"
+  ],
+  "isBilingual": false,
+  "ocrUsed": false,
+  "ocrConfidence": 0,
+  "issues": {
+    "grammar": [
+      {
+        "type": "spelling",
+        "message": "Misspelling of 'inflation' and 'earnings'.",
+        "original": "infltion, earngks",
+        "suggestion": "inflation, earnings",
+        "severity": "high"
+      },
+      {
+        "type": "grammar",
+        "message": "Incorrect phrase structure in the opening sentence.",
+        "original": "Last week is brought good news on the economy, US infltion, earngks, and finally trade",
+        "suggestion": "Last week brought good news on the economy, US inflation, earnings, and finally trade",
+        "severity": "high"
+      },
+      {
+        "type": "grammar",
+        "message": "Incorrect word usage.",
+        "original": "Turbulences!",
+        "suggestion": "Turbulence!",
+        "severity": "medium"
+      }
+    ],
+    "brand": [
+      {
+        "rule_id": "variable_format_003",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "medium",
+        "message": "Unknown variable: \"LastName\" - May need to be added to allowed list",
+        "original": "[Field: LastName]",
+        "suggestion": "Verify with CRM team. Common fields: First Name, Last Name, Pseudo ID, Email, Phone...",
+        "position": 177,
+        "found": "[Field: LastName]",
+        "context": "ked] Dear [Field: First Name] [Field: LastName], &bull; Last week brought goo"
+      },
+      {
+        "rule_id": "font_family_regular_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "Regular files must use \"Plus Jakarta Sans\"",
+        "original": "IBM Plex Sans, sans-serif",
+        "suggestion": "Plus Jakarta Sans, sans-serif",
+        "position": 372,
+        "found": "font-family: IBM Plex Sans, sans-serif"
+      },
+      {
+        "rule_id": "font_family_regular_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "Regular files must use \"Plus Jakarta Sans\"",
+        "original": "IBM Plex Sans, sans-serif",
+        "suggestion": "Plus Jakarta Sans, sans-serif",
+        "position": 712,
+        "found": "font-family: IBM Plex Sans, sans-serif"
+      },
+      {
+        "rule_id": "font_family_regular_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "Regular files must use \"Plus Jakarta Sans\"",
+        "original": "IBM Plex Sans, sans-serif",
+        "suggestion": "Plus Jakarta Sans, sans-serif",
+        "position": 981,
+        "found": "font-family: IBM Plex Sans, sans-serif"
+      },
+      {
+        "rule_id": "font_family_regular_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "Regular files must use \"Plus Jakarta Sans\"",
+        "original": "IBM Plex Sans, sans-serif",
+        "suggestion": "Plus Jakarta Sans, sans-serif",
+        "position": 1342,
+        "found": "font-family: IBM Plex Sans, sans-serif"
+      },
+      {
+        "rule_id": "font_family_regular_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "Regular files must use \"Plus Jakarta Sans\"",
+        "original": "IBM Plex Sans, sans-serif",
+        "suggestion": "Plus Jakarta Sans, sans-serif",
+        "position": 2617,
+        "found": "font-family: IBM Plex Sans, sans-serif"
+      },
+      {
+        "rule_id": "font_family_regular_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "Regular files must use \"Plus Jakarta Sans\"",
+        "original": "Verdana, Geneva, sans-serif><strong>&bull",
+        "suggestion": "Plus Jakarta Sans, sans-serif",
+        "position": 3283,
+        "found": "font-family: Verdana, Geneva, sans-serif><strong>&bull"
+      },
+      {
+        "rule_id": "font_family_regular_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "Regular files must use \"Plus Jakarta Sans\"",
+        "original": "IBM Plex Sans, sans-serif",
+        "suggestion": "Plus Jakarta Sans, sans-serif",
+        "position": 3399,
+        "found": "font-family: IBM Plex Sans, sans-serif"
+      },
+      {
+        "rule_id": "font_family_regular_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "Regular files must use \"Plus Jakarta Sans\"",
+        "original": "Verdana, Geneva, sans-serif><strong>&bull",
+        "suggestion": "Plus Jakarta Sans, sans-serif",
+        "position": 3838,
+        "found": "font-family: Verdana, Geneva, sans-serif><strong>&bull"
+      },
+      {
+        "rule_id": "font_family_regular_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "Regular files must use \"Plus Jakarta Sans\"",
+        "original": "IBM Plex Sans, sans-serif",
+        "suggestion": "Plus Jakarta Sans, sans-serif",
+        "position": 3942,
+        "found": "font-family: IBM Plex Sans, sans-serif"
+      },
+      {
+        "rule_id": "font_family_regular_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "Regular files must use \"Plus Jakarta Sans\"",
+        "original": "Verdana, Geneva, sans-serif><strong>&bull",
+        "suggestion": "Plus Jakarta Sans, sans-serif",
+        "position": 4379,
+        "found": "font-family: Verdana, Geneva, sans-serif><strong>&bull"
+      },
+      {
+        "rule_id": "font_family_regular_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "Regular files must use \"Plus Jakarta Sans\"",
+        "original": "IBM Plex Sans, sans-serif",
+        "suggestion": "Plus Jakarta Sans, sans-serif",
+        "position": 4483,
+        "found": "font-family: IBM Plex Sans, sans-serif"
+      },
+      {
+        "rule_id": "font_family_regular_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "Regular files must use \"Plus Jakarta Sans\"",
+        "original": "IBM Plex Sans, sans-serif",
+        "suggestion": "Plus Jakarta Sans, sans-serif",
+        "position": 9678,
+        "found": "font-family: IBM Plex Sans, sans-serif"
+      },
+      {
+        "rule_id": "font_family_regular_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "Regular files must use \"Plus Jakarta Sans\"",
+        "original": "IBM Plex Sans, sans-serif",
+        "suggestion": "Plus Jakarta Sans, sans-serif",
+        "position": 10088,
+        "found": "font-family: IBM Plex Sans, sans-serif"
+      },
+      {
+        "rule_id": "font_family_regular_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "Regular files must use \"Plus Jakarta Sans\"",
+        "original": "IBM Plex Sans, sans-serif",
+        "suggestion": "Plus Jakarta Sans, sans-serif",
+        "position": 11492,
+        "found": "font-family: IBM Plex Sans, sans-serif"
+      },
+      {
+        "rule_id": "font_family_regular_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "Regular files must use \"Plus Jakarta Sans\"",
+        "original": "IBM Plex Sans, sans-serif",
+        "suggestion": "Plus Jakarta Sans, sans-serif",
+        "position": 11896,
+        "found": "font-family: IBM Plex Sans, sans-serif"
+      },
+      {
+        "rule_id": "color_validation_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "high",
+        "message": "Unauthorized color code detected: #fefefe",
+        "original": "#fefefe",
+        "suggestion": "Verify if this color should be allowed. Current allowed: #072447, #FFFFFF, #ffffff, #e8e7ec, #E8E7EC, #e7e8ea, #ECEAEA, #666666, #FFF, #000",
+        "position": 338,
+        "found": "#fefefe"
+      },
+      {
+        "rule_id": "color_validation_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "high",
+        "message": "Unauthorized color code detected: #ededed",
+        "original": "#ededed",
+        "suggestion": "Verify if this color should be allowed. Current allowed: #072447, #FFFFFF, #ffffff, #e8e7ec, #E8E7EC, #e7e8ea, #ECEAEA, #666666, #FFF, #000",
+        "position": 783,
+        "found": "#ededed"
+      },
+      {
+        "rule_id": "color_validation_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "high",
+        "message": "Unauthorized color code detected: #461e57",
+        "original": "#461e57",
+        "suggestion": "Verify if this color should be allowed. Current allowed: #072447, #FFFFFF, #ffffff, #e8e7ec, #E8E7EC, #e7e8ea, #ECEAEA, #666666, #FFF, #000",
+        "position": 967,
+        "found": "#461e57"
+      },
+      {
+        "rule_id": "color_validation_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "high",
+        "message": "Unauthorized color code detected: #999999",
+        "original": "#999999",
+        "suggestion": "Verify if this color should be allowed. Current allowed: #072447, #FFFFFF, #ffffff, #e8e7ec, #E8E7EC, #e7e8ea, #ECEAEA, #666666, #FFF, #000",
+        "position": 1438,
+        "found": "#999999"
+      },
+      {
+        "rule_id": "color_validation_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "high",
+        "message": "Unauthorized color code detected: #03172E",
+        "original": "#03172E",
+        "suggestion": "Verify if this color should be allowed. Current allowed: #072447, #FFFFFF, #ffffff, #e8e7ec, #E8E7EC, #e7e8ea, #ECEAEA, #666666, #FFF, #000",
+        "position": 9735,
+        "found": "#03172E"
+      },
+      {
+        "rule_id": "color_validation_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "high",
+        "message": "Unauthorized color code detected: #03172E",
+        "original": "#03172E",
+        "suggestion": "Verify if this color should be allowed. Current allowed: #072447, #FFFFFF, #ffffff, #e8e7ec, #E8E7EC, #e7e8ea, #ECEAEA, #666666, #FFF, #000",
+        "position": 10145,
+        "found": "#03172E"
+      }
+    ],
+    "numerical": [],
+    "links": [
+      {
+        "rule_id": "link_empty_href_001",
+        "type": "link_validation",
+        "category": "broken_links",
+        "severity": "critical",
+        "message": "Link has empty href attribute",
+        "found": "href=\"\"",
+        "link_text": "",
+        "original": "<a href=\"\"><img src=\"https://cdn.emiratesnbd.com/assets/images/2025/enbd-cio-weekly-18feb25_04.jpg\" alt=\"Link Misssing\" width=\"500\" border=\"0\"  style=\"display:block; \"></a>",
+        "suggestion": "Add valid URL to href attribute"
+      },
+      {
+        "rule_id": "link_no_text_001",
+        "type": "accessibility",
+        "category": "link_accessibility",
+        "severity": "high",
+        "message": "Link has no visible text (accessibility issue)",
+        "found": "https://staging.emiratesnbd.com/en/cio-corner/good-news-supports-all-asset-classes?utm_source=Email&utm_medium=textlink&utm_term=Existing_&utm_content=CIONewsletterEDM&utm_campaign=PB_PLN_CIO-NEWSLETTER_28OCT25_PB_EDM&uuid=[Field: Pseudo ID]&seg=pb",
+        "link_text": "(empty)",
+        "original": "https://staging.emiratesnbd.com/en/cio-corner/good-news-supports-all-asset-classes?utm_source=Email&utm_medium=textlink&utm_term=Existing_&utm_content=CIONewsletterEDM&utm_campaign=PB_PLN_CIO-NEWSLETTER_28OCT25_PB_EDM&uuid=[Field: Pseudo ID]&seg=pb",
+        "suggestion": "Add descriptive link text"
+      },
+      {
+        "rule_id": "utm_tracking_001",
+        "type": "link_validation",
+        "category": "utm_tracking",
+        "severity": "medium",
+        "message": "Link missing UTM tracking parameters",
+        "found": "https://www.emiratesnbd.com/-/media/enbd/files/private/cio/others/global_investment_outlook_2025.pdf",
+        "link_text": "",
+        "original": "https://www.emiratesnbd.com/-/media/enbd/files/private/cio/others/global_investment_outlook_2025.pdf",
+        "suggestion": "Add tracking: https://www.emiratesnbd.com/-/media/enbd/files/private/cio/others/global_investment_outlook_2025.pdf?utm_source=edm&utm_medium=email"
+      },
+      {
+        "rule_id": "link_no_text_001",
+        "type": "accessibility",
+        "category": "link_accessibility",
+        "severity": "high",
+        "message": "Link has no visible text (accessibility issue)",
+        "found": "https://www.emiratesnbd.com/-/media/enbd/files/private/cio/others/global_investment_outlook_2025.pdf",
+        "link_text": "(empty)",
+        "original": "https://www.emiratesnbd.com/-/media/enbd/files/private/cio/others/global_investment_outlook_2025.pdf",
+        "suggestion": "Add descriptive link text"
+      },
+      {
+        "rule_id": "utm_tracking_001",
+        "type": "link_validation",
+        "category": "utm_tracking",
+        "severity": "medium",
+        "message": "Link missing UTM tracking parameters",
+        "found": "https://youtu.be/-U681zv4hr0?si=KG38Z8XV2woCZEcs",
+        "link_text": "",
+        "original": "https://youtu.be/-U681zv4hr0?si=KG38Z8XV2woCZEcs",
+        "suggestion": "Add tracking: https://youtu.be/-U681zv4hr0?si=KG38Z8XV2woCZEcs&utm_source=edm&utm_medium=email"
+      },
+      {
+        "rule_id": "link_no_text_001",
+        "type": "accessibility",
+        "category": "link_accessibility",
+        "severity": "high",
+        "message": "Link has no visible text (accessibility issue)",
+        "found": "https://youtu.be/-U681zv4hr0?si=KG38Z8XV2woCZEcs",
+        "link_text": "(empty)",
+        "original": "https://youtu.be/-U681zv4hr0?si=KG38Z8XV2woCZEcs",
+        "suggestion": "Add descriptive link text"
+      },
+      {
+        "rule_id": "link_no_text_001",
+        "type": "accessibility",
+        "category": "link_accessibility",
+        "severity": "high",
+        "message": "Link has no visible text (accessibility issue)",
+        "found": "https://www.emiratesnbd.com/en/cio-corner/turbulences?utm_source=Email&utm_medium=textlink&utm_term=Existing_&utm_content=CIONewsletterEDM&utm_campaign=PB_PLN_CIO-NEWSLETTER_28OCT25_PB_EDM&uuid=[Field: Pseudo ID]&seg=pb",
+        "link_text": "(empty)",
+        "original": "https://www.emiratesnbd.com/en/cio-corner/turbulences?utm_source=Email&utm_medium=textlink&utm_term=Existing_&utm_content=CIONewsletterEDM&utm_campaign=PB_PLN_CIO-NEWSLETTER_28OCT25_PB_EDM&uuid=[Field: Pseudo ID]&seg=pb",
+        "suggestion": "Add descriptive link text"
+      },
+      {
+        "rule_id": "link_no_text_001",
+        "type": "accessibility",
+        "category": "link_accessibility",
+        "severity": "high",
+        "message": "Link has no visible text (accessibility issue)",
+        "found": "https://www.emiratesnbd.com/en/cio-corner/trade-anxiety-makes-a-comeback?utm_source=Email&utm_medium=textlink&utm_term=Existing_&utm_content=CIONewsletterEDM&utm_campaign=PB_PLN_CIO-NEWSLETTER_28OCT25_PB_EDM&uuid=[Field: Pseudo ID]&seg=pb",
+        "link_text": "(empty)",
+        "original": "https://www.emiratesnbd.com/en/cio-corner/trade-anxiety-makes-a-comeback?utm_source=Email&utm_medium=textlink&utm_term=Existing_&utm_content=CIONewsletterEDM&utm_campaign=PB_PLN_CIO-NEWSLETTER_28OCT25_PB_EDM&uuid=[Field: Pseudo ID]&seg=pb",
+        "suggestion": "Add descriptive link text"
+      },
+      {
+        "rule_id": "utm_tracking_001",
+        "type": "link_validation",
+        "category": "utm_tracking",
+        "severity": "medium",
+        "message": "Link missing UTM tracking parameters",
+        "found": "https://www.emiratesnbd.com/en/cio-corner/less-data-more-momentum",
+        "link_text": "",
+        "original": "https://www.emiratesnbd.com/en/cio-corner/less-data-more-momentum",
+        "suggestion": "Add tracking: https://www.emiratesnbd.com/en/cio-corner/less-data-more-momentum?utm_source=edm&utm_medium=email"
+      },
+      {
+        "rule_id": "link_no_text_001",
+        "type": "accessibility",
+        "category": "link_accessibility",
+        "severity": "high",
+        "message": "Link has no visible text (accessibility issue)",
+        "found": "https://www.emiratesnbd.com/en/cio-corner/less-data-more-momentum",
+        "link_text": "(empty)",
+        "original": "https://www.emiratesnbd.com/en/cio-corner/less-data-more-momentum",
+        "suggestion": "Add descriptive link text"
+      },
+      {
+        "rule_id": "link_no_text_001",
+        "type": "accessibility",
+        "category": "link_accessibility",
+        "severity": "high",
+        "message": "Link has no visible text (accessibility issue)",
+        "found": "https://www.emiratesnbd.com/en/corporate-social-responsibility/financial-literacy?utm_source=Email&utm_medium=textlink&utm_term=Existing_&utm_content=CIONewsletterEDM&utm_campaign=PB_PLN_CIO-NEWSLETTER_28OCT25_PB_EDM&uuid=[Field: Pseudo ID]&seg=pb#podcast",
+        "link_text": "(empty)",
+        "original": "https://www.emiratesnbd.com/en/corporate-social-responsibility/financial-literacy?utm_source=Email&utm_medium=textlink&utm_term=Existing_&utm_content=CIONewsletterEDM&utm_campaign=PB_PLN_CIO-NEWSLETTER_28OCT25_PB_EDM&uuid=[Field: Pseudo ID]&seg=pb#podcast",
+        "suggestion": "Add descriptive link text"
+      },
+      {
+        "rule_id": "url_malformed_001",
+        "type": "link_validation",
+        "category": "broken_links",
+        "severity": "critical",
+        "message": "Malformed URL with extra dashes (---https://)",
+        "found": "---https://www.emiratesnbd.com/en/security?utm_source=Email&utm_medium=textlink&utm_term=Existing_&utm_content=CIONewsletterEDM&utm_campaign=PB_PLN_CIO-NEWSLETTER_28OCT25_PB_EDM&uuid=[Field: Pseudo ID]&seg=pb",
+        "link_text": "click here",
+        "original": "---https://www.emiratesnbd.com/en/security?utm_source=Email&utm_medium=textlink&utm_term=Existing_&utm_content=CIONewsletterEDM&utm_campaign=PB_PLN_CIO-NEWSLETTER_28OCT25_PB_EDM&uuid=[Field: Pseudo ID]&seg=pb",
+        "suggestion": "Fix URL format before deployment"
+      },
+      {
+        "rule_id": "link_no_text_001",
+        "type": "accessibility",
+        "category": "link_accessibility",
+        "severity": "high",
+        "message": "Link has no visible text (accessibility issue)",
+        "found": "https://www.emiratesnbd.com/en/ways-of-banking/mobile-banking?utm_source=Email&utm_medium=textlink&utm_term=Existing_&utm_content=CIONewsletterEDM&utm_campaign=PB_PLN_CIO-NEWSLETTER_28OCT25_PB_EDM&uuid=[Field: Pseudo ID]&seg=pb",
+        "link_text": "(empty)",
+        "original": "https://www.emiratesnbd.com/en/ways-of-banking/mobile-banking?utm_source=Email&utm_medium=textlink&utm_term=Existing_&utm_content=CIONewsletterEDM&utm_campaign=PB_PLN_CIO-NEWSLETTER_28OCT25_PB_EDM&uuid=[Field: Pseudo ID]&seg=pb",
+        "suggestion": "Add descriptive link text"
+      },
+      {
+        "rule_id": "link_no_text_001",
+        "type": "accessibility",
+        "category": "link_accessibility",
+        "severity": "high",
+        "message": "Link has no visible text (accessibility issue)",
+        "found": "https://www.emiratesnbd.com/en/schedule-of-fees-and-charges?utm_source=Email&utm_medium=textlink&utm_term=Existing_&utm_content=CIONewsletterEDM&utm_campaign=PB_PLN_CIO-NEWSLETTER_28OCT25_PB_EDM&uuid=[Field: Pseudo ID]&seg=pb",
+        "link_text": "(empty)",
+        "original": "https://www.emiratesnbd.com/en/schedule-of-fees-and-charges?utm_source=Email&utm_medium=textlink&utm_term=Existing_&utm_content=CIONewsletterEDM&utm_campaign=PB_PLN_CIO-NEWSLETTER_28OCT25_PB_EDM&uuid=[Field: Pseudo ID]&seg=pb",
+        "suggestion": "Add descriptive link text"
+      },
+      {
+        "rule_id": "utm_tracking_001",
+        "type": "link_validation",
+        "category": "utm_tracking",
+        "severity": "medium",
+        "message": "Link missing UTM tracking parameters",
+        "found": "https://www.facebook.com/EmiratesNBD",
+        "link_text": "",
+        "original": "https://www.facebook.com/EmiratesNBD",
+        "suggestion": "Add tracking: https://www.facebook.com/EmiratesNBD?utm_source=edm&utm_medium=email"
+      },
+      {
+        "rule_id": "link_no_text_001",
+        "type": "accessibility",
+        "category": "link_accessibility",
+        "severity": "high",
+        "message": "Link has no visible text (accessibility issue)",
+        "found": "https://www.facebook.com/EmiratesNBD",
+        "link_text": "(empty)",
+        "original": "https://www.facebook.com/EmiratesNBD",
+        "suggestion": "Add descriptive link text"
+      },
+      {
+        "rule_id": "utm_tracking_001",
+        "type": "link_validation",
+        "category": "utm_tracking",
+        "severity": "medium",
+        "message": "Link missing UTM tracking parameters",
+        "found": "https://twitter.com/EmiratesNBD_AE",
+        "link_text": "",
+        "original": "https://twitter.com/EmiratesNBD_AE",
+        "suggestion": "Add tracking: https://twitter.com/EmiratesNBD_AE?utm_source=edm&utm_medium=email"
+      },
+      {
+        "rule_id": "link_no_text_001",
+        "type": "accessibility",
+        "category": "link_accessibility",
+        "severity": "high",
+        "message": "Link has no visible text (accessibility issue)",
+        "found": "https://twitter.com/EmiratesNBD_AE",
+        "link_text": "(empty)",
+        "original": "https://twitter.com/EmiratesNBD_AE",
+        "suggestion": "Add descriptive link text"
+      },
+      {
+        "rule_id": "utm_tracking_001",
+        "type": "link_validation",
+        "category": "utm_tracking",
+        "severity": "medium",
+        "message": "Link missing UTM tracking parameters",
+        "found": "https://www.instagram.com/emiratesnbd_ae",
+        "link_text": "",
+        "original": "https://www.instagram.com/emiratesnbd_ae",
+        "suggestion": "Add tracking: https://www.instagram.com/emiratesnbd_ae?utm_source=edm&utm_medium=email"
+      },
+      {
+        "rule_id": "link_no_text_001",
+        "type": "accessibility",
+        "category": "link_accessibility",
+        "severity": "high",
+        "message": "Link has no visible text (accessibility issue)",
+        "found": "https://www.instagram.com/emiratesnbd_ae",
+        "link_text": "(empty)",
+        "original": "https://www.instagram.com/emiratesnbd_ae",
+        "suggestion": "Add descriptive link text"
+      },
+      {
+        "rule_id": "utm_tracking_001",
+        "type": "link_validation",
+        "category": "utm_tracking",
+        "severity": "medium",
+        "message": "Link missing UTM tracking parameters",
+        "found": "https://www.youtube.com/user/EmiratesNBDChannel",
+        "link_text": "",
+        "original": "https://www.youtube.com/user/EmiratesNBDChannel",
+        "suggestion": "Add tracking: https://www.youtube.com/user/EmiratesNBDChannel?utm_source=edm&utm_medium=email"
+      },
+      {
+        "rule_id": "link_no_text_001",
+        "type": "accessibility",
+        "category": "link_accessibility",
+        "severity": "high",
+        "message": "Link has no visible text (accessibility issue)",
+        "found": "https://www.youtube.com/user/EmiratesNBDChannel",
+        "link_text": "(empty)",
+        "original": "https://www.youtube.com/user/EmiratesNBDChannel",
+        "suggestion": "Add descriptive link text"
+      },
+      {
+        "rule_id": "utm_tracking_001",
+        "type": "link_validation",
+        "category": "utm_tracking",
+        "severity": "medium",
+        "message": "Link missing UTM tracking parameters",
+        "found": "https://www.linkedin.com/company/emirates-nbd",
+        "link_text": "",
+        "original": "https://www.linkedin.com/company/emirates-nbd",
+        "suggestion": "Add tracking: https://www.linkedin.com/company/emirates-nbd?utm_source=edm&utm_medium=email"
+      },
+      {
+        "rule_id": "link_no_text_001",
+        "type": "accessibility",
+        "category": "link_accessibility",
+        "severity": "high",
+        "message": "Link has no visible text (accessibility issue)",
+        "found": "https://www.linkedin.com/company/emirates-nbd",
+        "link_text": "(empty)",
+        "original": "https://www.linkedin.com/company/emirates-nbd",
+        "suggestion": "Add descriptive link text"
+      },
+      {
+        "rule_id": "link_no_text_001",
+        "type": "accessibility",
+        "category": "link_accessibility",
+        "severity": "high",
+        "message": "Link has no visible text (accessibility issue)",
+        "found": "https://www.emiratesnbd.com/en/campaigns/communication-preferences?utm_source=Email&utm_medium=textlink&utm_term=Existing_&utm_content=CIONewsletterEDM&utm_campaign=PB_PLN_CIO-NEWSLETTER_28OCT25_PB_EDM&uuid=[Field: Pseudo ID]&seg=pb",
+        "link_text": "(empty)",
+        "original": "https://www.emiratesnbd.com/en/campaigns/communication-preferences?utm_source=Email&utm_medium=textlink&utm_term=Existing_&utm_content=CIONewsletterEDM&utm_campaign=PB_PLN_CIO-NEWSLETTER_28OCT25_PB_EDM&uuid=[Field: Pseudo ID]&seg=pb",
+        "suggestion": "Add descriptive link text"
+      },
+      {
+        "rule_id": "staging_url_001",
+        "type": "deployment",
+        "category": "broken_links",
+        "severity": "critical",
+        "message": "Ã°Å¸Å¡Â¨ STAGING/TEST URL DETECTED - Must use production URL",
+        "original": "https://staging.emiratesnbd.com",
+        "suggestion": "Replace with www.emiratesnbd.com",
+        "position": 5050,
+        "found": "https://staging.emiratesnbd.com"
+      }
+    ],
+    "images": [
+      {
+        "rule_id": "accessibility_002",
+        "type": "accessibility",
+        "category": "image_accessibility",
+        "severity": "high",
+        "message": "Image missing alt text for accessibility",
+        "found": "https://cdn.emiratesnbd.com/assets/images/lock-icon_Ins.jpg",
+        "original": "",
+        "suggestion": "Add descriptive alt text for screen readers"
+      },
+      {
+        "rule_id": "accessibility_002",
+        "type": "accessibility",
+        "category": "image_accessibility",
+        "severity": "high",
+        "message": "Image missing alt text for accessibility",
+        "found": "https://cdn.emiratesnbd.com/assets/images/2025/enbd-cio-weekly-18feb25_02.jpg",
+        "original": "",
+        "suggestion": "Add descriptive alt text for screen readers"
+      },
+      {
+        "rule_id": "accessibility_002",
+        "type": "accessibility",
+        "category": "image_accessibility",
+        "severity": "high",
+        "message": "Image missing alt text for accessibility",
+        "found": "https://cdn.emiratesnbd.com/assets/images/2023-j/enbd-2024-cio-weekly-4jun24_08.jpg",
+        "original": "",
+        "suggestion": "Add descriptive alt text for screen readers"
+      },
+      {
+        "rule_id": "accessibility_002",
+        "type": "accessibility",
+        "category": "image_accessibility",
+        "severity": "high",
+        "message": "Image missing alt text for accessibility",
+        "found": "https://www.emiratesnbd.com/-/media/enbd/images/private-banking/cio-corners/weekly-cio-corner/2025/august/cioweekly_201025_thumb.jpg",
+        "original": "",
+        "suggestion": "Add descriptive alt text for screen readers"
+      },
+      {
+        "rule_id": "accessibility_002",
+        "type": "accessibility",
+        "category": "image_accessibility",
+        "severity": "high",
+        "message": "Image missing alt text for accessibility",
+        "found": "https://www.emiratesnbd.com/-/media/enbd/images/private-banking/cio-corners/weekly-cio-corner/2025/august/cioweekly_131025_thumb.jpg",
+        "original": "",
+        "suggestion": "Add descriptive alt text for screen readers"
+      },
+      {
+        "rule_id": "accessibility_002",
+        "type": "accessibility",
+        "category": "image_accessibility",
+        "severity": "high",
+        "message": "Image missing alt text for accessibility",
+        "found": "https://www.emiratesnbd.com/-/media/enbd/images/private-banking/cio-corners/weekly-cio-corner/2025/august/cioweekly_061025_thumb.jpg",
+        "original": "",
+        "suggestion": "Add descriptive alt text for screen readers"
+      },
+      {
+        "rule_id": "accessibility_002",
+        "type": "accessibility",
+        "category": "image_accessibility",
+        "severity": "high",
+        "message": "Image missing alt text for accessibility",
+        "found": "https://cdn.emiratesnbd.com/assets/images/2025/cio-weekly-newsletter-16sep25_02.jpg",
+        "original": "",
+        "suggestion": "Add descriptive alt text for screen readers"
+      },
+      {
+        "rule_id": "accessibility_002",
+        "type": "accessibility",
+        "category": "image_accessibility",
+        "severity": "high",
+        "message": "Image missing alt text for accessibility",
+        "found": "https://cdn.emiratesnbd.com/assets/images/2025/cio-weekly-newsletter-16sep25_03.jpg",
+        "original": "",
+        "suggestion": "Add descriptive alt text for screen readers"
+      },
+      {
+        "rule_id": "accessibility_002",
+        "type": "accessibility",
+        "category": "image_accessibility",
+        "severity": "high",
+        "message": "Image missing alt text for accessibility",
+        "found": "https://cdn.emiratesnbd.com/assets/images/2025/au19_verifiedIcon_blue-mobile.png",
+        "original": "",
+        "suggestion": "Add descriptive alt text for screen readers"
+      },
+      {
+        "rule_id": "accessibility_002",
+        "type": "accessibility",
+        "category": "image_accessibility",
+        "severity": "high",
+        "message": "Image missing alt text for accessibility",
+        "found": "https://cdn.emiratesnbd.com/assets/images/2023-j/pb-investment-adventurous-en_ap3_11_01.jpg",
+        "original": "",
+        "suggestion": "Add descriptive alt text for screen readers"
+      },
+      {
+        "rule_id": "accessibility_002",
+        "type": "accessibility",
+        "category": "image_accessibility",
+        "severity": "high",
+        "message": "Image missing alt text for accessibility",
+        "found": "https://cdn.emiratesnbd.com/assets/images/2023-j/pb-investment-adventurous-en_ap3_11_02.jpg",
+        "original": "",
+        "suggestion": "Add descriptive alt text for screen readers"
+      },
+      {
+        "rule_id": "accessibility_002",
+        "type": "accessibility",
+        "category": "image_accessibility",
+        "severity": "high",
+        "message": "Image missing alt text for accessibility",
+        "found": "https://cdn.emiratesnbd.com/assets/images/2023-j/pb-investment-adventurous-en_ap3_11_03.jpg",
+        "original": "",
+        "suggestion": "Add descriptive alt text for screen readers"
+      },
+      {
+        "rule_id": "accessibility_002",
+        "type": "accessibility",
+        "category": "image_accessibility",
+        "severity": "high",
+        "message": "Image missing alt text for accessibility",
+        "found": "https://cdn.emiratesnbd.com/assets/images/2023-j/pb-investment-adventurous-en_ap3_11_04.jpg",
+        "original": "",
+        "suggestion": "Add descriptive alt text for screen readers"
+      },
+      {
+        "rule_id": "accessibility_002",
+        "type": "accessibility",
+        "category": "image_accessibility",
+        "severity": "high",
+        "message": "Image missing alt text for accessibility",
+        "found": "https://cdn.emiratesnbd.com/assets/images/2023-j/pb-investment-adventurous-en_ap3_11_05.jpg",
+        "original": "",
+        "suggestion": "Add descriptive alt text for screen readers"
+      },
+      {
+        "rule_id": "accessibility_002",
+        "type": "accessibility",
+        "category": "image_accessibility",
+        "severity": "high",
+        "message": "Image missing alt text for accessibility",
+        "found": "https://cdn.emiratesnbd.com/assets/images/2023-j/pb-investment-adventurous-en_ap3_11_06.jpg",
+        "original": "",
+        "suggestion": "Add descriptive alt text for screen readers"
+      },
+      {
+        "rule_id": "accessibility_002",
+        "type": "accessibility",
+        "category": "image_accessibility",
+        "severity": "high",
+        "message": "Image missing alt text for accessibility",
+        "found": "https://cdn.emiratesnbd.com/assets/images/2023-j/pb-investment-adventurous-en_ap3_11_07.jpg",
+        "original": "",
+        "suggestion": "Add descriptive alt text for screen readers"
+      },
+      {
+        "rule_id": "accessibility_002",
+        "type": "accessibility",
+        "category": "image_accessibility",
+        "severity": "high",
+        "message": "Image missing alt text for accessibility",
+        "found": "https://cdn.emiratesnbd.com/assets/images/2023-j/pb-investment-adventurous-en_ap3_12.jpg",
+        "original": "",
+        "suggestion": "Add descriptive alt text for screen readers"
+      },
+      {
+        "rule_id": "accessibility_002",
+        "type": "accessibility",
+        "category": "image_accessibility",
+        "severity": "high",
+        "message": "Image missing alt text for accessibility",
+        "found": "https://cdn.emiratesnbd.com/assets/images/2023-j/pb-investment-adventurous-en_ap3_13.jpg",
+        "original": "",
+        "suggestion": "Add descriptive alt text for screen readers"
+      },
+      {
+        "rule_id": "accessibility_002",
+        "type": "accessibility",
+        "category": "image_accessibility",
+        "severity": "high",
+        "message": "Image missing alt text for accessibility",
+        "found": "https://7fhq4a80.emltrk.com/v2/7fhq4a80?i=[CONTACT-ID]&t=PB_PLN_CIO-NEWSLETTER_28OCT25_PB_EDM",
+        "original": "",
+        "suggestion": "Add descriptive alt text for screen readers"
+      }
+    ],
+    "cta": [
+      {
+        "rule_id": "cta_optimization",
+        "type": "cta_optimization",
+        "category": "cta",
+        "severity": "medium",
+        "message": "Generic CTA detected",
+        "original": "",
+        "suggestion": "Use action-oriented CTAs: \"Apply Now\", \"Start Earning\", \"Get Your Quote\""
+      }
+    ],
+    "tone": [],
+    "legal": [],
+    "accessibility": []
+  },
+  "metrics": {
+    "totalIssues": 71,
+    "criticalIssues": 18,
+    "highIssues": 42,
+    "mediumIssues": 11,
+    "lowIssues": 0,
+    "complianceScore": 0
+  },
+  "suggestions": [
+    "Consider revising the opening sentence to correct the grammatical errors and ensure it reads smoothly.",
+    "Review and correct all spelling mistakes to maintain professionalism and clarity.",
+    "Rephrase 'Turbulences!' to 'Turbulence!' for correct grammar usage.",
+    "Ensure all dynamic fields such as [Field: First Name] [Field: LastName] are correctly implemented in the email system to prevent personalization errors."
+  ],
+  "processingTime": 11113,
+  "timestamp": "2025-11-03T11:19:52.417Z"
+}

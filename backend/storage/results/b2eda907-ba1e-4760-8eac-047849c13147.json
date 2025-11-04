@@ -1,0 +1,283 @@
+{
+  "id": "b2eda907-ba1e-4760-8eac-047849c13147",
+  "fileName": "ENBD-Marriott-World-Elite_OAF-oct2025.html",
+  "fileType": "html",
+  "status": "completed",
+  "extractedText": "ENBD | Marriott OAF Card Type Joining Fee The Marriott Bonvoy® World Elite Mastercard® AED 1,575 SPECIAL OFFERS (1) Welcome Offer - Up to 150,000 Bonus Points > 75,000 Points on Card activation and payment of applicable joining fees. > 75,000 Points on cumulative retail spends of US$ 15,000 in the first 3 months from Card issuance. (2) Marriott Bonvoy® Elite status Get automatic Gold Elite status , plus a pathway to Platinum Elite status on cumulative annual spend of US$ 100,000. (3) Free Night ",
+  "language": "ara",
+  "languages": [
+    "ara",
+    "eng"
+  ],
+  "isBilingual": true,
+  "ocrUsed": false,
+  "ocrConfidence": 0,
+  "issues": {
+    "grammar": [
+      {
+        "type": "grammar",
+        "message": "استخدام علامات الترقيم بشكل غير متسق",
+        "original": "بطاقة ®Marriott Bonvoy وورلد إيليت ماستركارد® العروض الخاصة",
+        "suggestion": "بطاقة ®Marriott Bonvoy وورلد إيليت ماستركارد®: العروض الخاصة",
+        "severity": "low",
+        "language": "both"
+      },
+      {
+        "type": "grammar",
+        "message": "خطأ في استخدام الأرقام",
+        "original": "حتى 1 50,000 نقطة إضافية",
+        "suggestion": "حتى 150,000 نقطة إضافية",
+        "severity": "high",
+        "language": "both"
+      }
+    ],
+    "brand": [
+      {
+        "rule_id": "font_family_arabic_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "ðŸŒ Arabic content must use \"Tajawal, sans-serif\" font",
+        "original": "Plus Jakarta Sans",
+        "suggestion": "Tajawal, sans-serif",
+        "position": 24062,
+        "found": "font-family: Plus Jakarta Sans",
+        "context": " line-height: 22px\" dir=\"rtl\"><strong>75,000 نقطة</strong> عند تفعيل البطاقة ودفع رسوم الانضمام المط...",
+        "language": "arabic"
+      },
+      {
+        "rule_id": "font_family_arabic_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "ðŸŒ Arabic content must use \"Tajawal, sans-serif\" font",
+        "original": "Plus Jakarta Sans",
+        "suggestion": "Tajawal, sans-serif",
+        "position": 24838,
+        "found": "font-family: Plus Jakarta Sans",
+        "context": "دولار أمريكي كمجموع تراكمي لعمليات الإنفاق في كشوفات فواتير الأشهر الثلاث الأولى والتي تبدأ من تاريخ...",
+        "language": "arabic"
+      },
+      {
+        "rule_id": "font_family_arabic_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "ðŸŒ Arabic content must use \"Tajawal, sans-serif\" font",
+        "original": "Plus Jakarta Sans",
+        "suggestion": "Tajawal, sans-serif",
+        "position": 26141,
+        "found": "font-family: Plus Jakarta Sans",
+        "context": "نية الانتقال إلى العضوية بدرجة بلاتينوم إيليت عند إنفاق 100,000 دولار أمريكي كمجموع تراكمي لعمليات ا...",
+        "language": "arabic"
+      },
+      {
+        "rule_id": "font_family_arabic_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "ðŸŒ Arabic content must use \"Tajawal, sans-serif\" font",
+        "original": "Plus Jakarta Sans",
+        "suggestion": "Tajawal, sans-serif",
+        "position": 27383,
+        "found": "font-family: Plus Jakarta Sans",
+        "context": "><br>\r\n                                          <strong>50,000</strong> <strong>نقطة</strong> في ال...",
+        "language": "arabic"
+      },
+      {
+        "rule_id": "font_family_arabic_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "ðŸŒ Arabic content must use \"Tajawal, sans-serif\" font",
+        "original": "Plus Jakarta Sans",
+        "suggestion": "Tajawal, sans-serif",
+        "position": 28471,
+        "found": "font-family: Plus Jakarta Sans",
+        "context": " كرصيد إضافي</strong> سيساعدك على الانتقال إلى المستوى التالي من عضوية ®Marriott Bonvoy بدرجة إيليت ...",
+        "language": "arabic"
+      },
+      {
+        "rule_id": "font_family_regular_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "Regular files must use \"Plus Jakarta Sans\"",
+        "original": "Tajawal, sans-serif",
+        "suggestion": "Plus Jakarta Sans, sans-serif",
+        "position": 34380,
+        "found": "font-family: Tajawal, sans-serif",
+        "language": "arabic"
+      }
+    ],
+    "numerical": [],
+    "links": [],
+    "images": [
+      {
+        "rule_id": "accessibility_002",
+        "type": "accessibility",
+        "category": "image_accessibility",
+        "severity": "high",
+        "message": "Image missing alt text for accessibility",
+        "found": "https://cdn.emiratesnbd.com/assets/images/2025/n3_1_Marriott-World-Elite.png",
+        "original": "",
+        "suggestion": "Add descriptive alt text for screen readers",
+        "language": "english"
+      },
+      {
+        "rule_id": "accessibility_002",
+        "type": "accessibility",
+        "category": "image_accessibility",
+        "severity": "high",
+        "message": "Image missing alt text for accessibility",
+        "found": "https://cdn.emiratesnbd.com/assets/images/2025/n3_1_Marriott-World-Elite.png",
+        "original": "",
+        "suggestion": "Add descriptive alt text for screen readers",
+        "language": "english"
+      }
+    ],
+    "cta": [],
+    "tone": [],
+    "legal": [],
+    "accessibility": []
+  },
+  "issuesByLanguage": {
+    "english": [
+      {
+        "rule_id": "accessibility_002",
+        "type": "accessibility",
+        "category": "image_accessibility",
+        "severity": "high",
+        "message": "Image missing alt text for accessibility",
+        "found": "https://cdn.emiratesnbd.com/assets/images/2025/n3_1_Marriott-World-Elite.png",
+        "original": "",
+        "suggestion": "Add descriptive alt text for screen readers",
+        "language": "english"
+      },
+      {
+        "rule_id": "accessibility_002",
+        "type": "accessibility",
+        "category": "image_accessibility",
+        "severity": "high",
+        "message": "Image missing alt text for accessibility",
+        "found": "https://cdn.emiratesnbd.com/assets/images/2025/n3_1_Marriott-World-Elite.png",
+        "original": "",
+        "suggestion": "Add descriptive alt text for screen readers",
+        "language": "english"
+      }
+    ],
+    "arabic": [
+      {
+        "rule_id": "font_family_arabic_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "ðŸŒ Arabic content must use \"Tajawal, sans-serif\" font",
+        "original": "Plus Jakarta Sans",
+        "suggestion": "Tajawal, sans-serif",
+        "position": 24062,
+        "found": "font-family: Plus Jakarta Sans",
+        "context": " line-height: 22px\" dir=\"rtl\"><strong>75,000 نقطة</strong> عند تفعيل البطاقة ودفع رسوم الانضمام المط...",
+        "language": "arabic"
+      },
+      {
+        "rule_id": "font_family_arabic_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "ðŸŒ Arabic content must use \"Tajawal, sans-serif\" font",
+        "original": "Plus Jakarta Sans",
+        "suggestion": "Tajawal, sans-serif",
+        "position": 24838,
+        "found": "font-family: Plus Jakarta Sans",
+        "context": "دولار أمريكي كمجموع تراكمي لعمليات الإنفاق في كشوفات فواتير الأشهر الثلاث الأولى والتي تبدأ من تاريخ...",
+        "language": "arabic"
+      },
+      {
+        "rule_id": "font_family_arabic_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "ðŸŒ Arabic content must use \"Tajawal, sans-serif\" font",
+        "original": "Plus Jakarta Sans",
+        "suggestion": "Tajawal, sans-serif",
+        "position": 26141,
+        "found": "font-family: Plus Jakarta Sans",
+        "context": "نية الانتقال إلى العضوية بدرجة بلاتينوم إيليت عند إنفاق 100,000 دولار أمريكي كمجموع تراكمي لعمليات ا...",
+        "language": "arabic"
+      },
+      {
+        "rule_id": "font_family_arabic_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "ðŸŒ Arabic content must use \"Tajawal, sans-serif\" font",
+        "original": "Plus Jakarta Sans",
+        "suggestion": "Tajawal, sans-serif",
+        "position": 27383,
+        "found": "font-family: Plus Jakarta Sans",
+        "context": "><br>\r\n                                          <strong>50,000</strong> <strong>نقطة</strong> في ال...",
+        "language": "arabic"
+      },
+      {
+        "rule_id": "font_family_arabic_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "ðŸŒ Arabic content must use \"Tajawal, sans-serif\" font",
+        "original": "Plus Jakarta Sans",
+        "suggestion": "Tajawal, sans-serif",
+        "position": 28471,
+        "found": "font-family: Plus Jakarta Sans",
+        "context": " كرصيد إضافي</strong> سيساعدك على الانتقال إلى المستوى التالي من عضوية ®Marriott Bonvoy بدرجة إيليت ...",
+        "language": "arabic"
+      },
+      {
+        "rule_id": "font_family_regular_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "Regular files must use \"Plus Jakarta Sans\"",
+        "original": "Tajawal, sans-serif",
+        "suggestion": "Plus Jakarta Sans, sans-serif",
+        "position": 34380,
+        "found": "font-family: Tajawal, sans-serif",
+        "language": "arabic"
+      }
+    ],
+    "both": [
+      {
+        "type": "grammar",
+        "message": "استخدام علامات الترقيم بشكل غير متسق",
+        "original": "بطاقة ®Marriott Bonvoy وورلد إيليت ماستركارد® العروض الخاصة",
+        "suggestion": "بطاقة ®Marriott Bonvoy وورلد إيليت ماستركارد®: العروض الخاصة",
+        "severity": "low",
+        "language": "both"
+      },
+      {
+        "type": "grammar",
+        "message": "خطأ في استخدام الأرقام",
+        "original": "حتى 1 50,000 نقطة إضافية",
+        "suggestion": "حتى 150,000 نقطة إضافية",
+        "severity": "high",
+        "language": "both"
+      }
+    ]
+  },
+  "metrics": {
+    "totalIssues": 10,
+    "criticalIssues": 6,
+    "highIssues": 3,
+    "mediumIssues": 0,
+    "lowIssues": 1,
+    "complianceScore": 0,
+    "englishIssues": 2,
+    "arabicIssues": 6
+  },
+  "suggestions": [
+    "استخدام علامات الترقيم بشكل متسق عبر النص لتحسين القراءة والفهم.",
+    "مراجعة الأرقام والتأكد من صحتها لتجنب اللبس."
+  ],
+  "processingTime": 17905,
+  "timestamp": "2025-11-03T13:30:36.578Z"
+}

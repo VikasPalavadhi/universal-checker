@@ -1,0 +1,239 @@
+rules:
+  # ============================================
+  # BRAND TERMINOLOGY
+  # ============================================
+  
+  - id: brand_term_001
+    category: brand_compliance
+    severity: critical
+    pattern: '\binterest rate\b'
+    replacement: 'profit rate'
+    message: 'Use "profit rate" instead of "interest rate" for Sharia compliance'
+    context_exceptions:
+      - 'legal disclaimer'
+      - 'regulatory'
+    applies_to: [edm, web, social]
+
+  - id: brand_term_002
+    category: brand_compliance
+    severity: high
+    pattern: '\bloans?\b'
+    replacement: 'financing'
+    message: 'Use "financing" instead of "loan" for Sharia compliance'
+    context_exceptions:
+      - 'personal loan'
+      - 'car loan'
+    applies_to: [edm, web]
+
+  # ============================================
+  # CURRENCY FORMAT
+  # ============================================
+
+  - id: currency_format_001
+    category: numerical_format
+    severity: high
+    pattern: '(AED|USD|EUR|GBP)(\d+)'
+    message: 'Currency should have space between code and amount'
+    suggestion: 'Format as "AED 1,000" not "AED1000"'
+    applies_to: [edm, web, document]
+
+  # ============================================
+  # TONE & LANGUAGE
+  # ============================================
+
+  - id: tone_001
+    category: tone
+    severity: medium
+    pattern: '\b(amazing|awesome|incredible|unbelievable)\b'
+    message: 'Avoid overly casual language in financial communications'
+    suggestion: 'Use professional alternatives: "excellent", "exceptional", "outstanding"'
+    applies_to: [edm, web, social]
+
+  - id: tone_002
+    category: tone
+    severity: high
+    pattern: '\b(hurry|act now|limited time|don''t miss)\b'
+    message: 'Avoid creating false urgency'
+    suggestion: 'Focus on benefits rather than urgency'
+    applies_to: [edm, web]
+
+  # ============================================
+  # CALL-TO-ACTION
+  # ============================================
+
+  - id: cta_001
+    category: cta
+    severity: medium
+    pattern: '\b(click here|learn more|read more)\b'
+    message: 'Generic CTA detected - use more specific and action-oriented text'
+    suggestion: 'Examples: "Apply Now", "Start Earning Rewards", "Get Your Free Quote"'
+    applies_to: [edm, web]
+
+  # ============================================
+  # LEGAL & DISCLAIMERS
+  # ============================================
+
+  - id: legal_001
+    category: legal_compliance
+    severity: high
+    pattern: '\b(guaranteed|promise|100%)\b'
+    message: 'Potentially misleading claim detected'
+    suggestion: 'Avoid absolute guarantees in financial products'
+    applies_to: [edm, web, social]
+
+  # ============================================
+  # ACCESSIBILITY
+  # ============================================
+
+  - id: accessibility_001
+    category: accessibility
+    severity: medium
+    pattern: '<a[^>]+href[^>]*>(click here|here|read more)</a>'
+    message: 'Link text should be descriptive for screen readers'
+    suggestion: 'Use meaningful link text that describes the destination'
+    applies_to: [edm, web]
+
+  - id: accessibility_002
+    category: accessibility
+    severity: high
+    pattern: '<img(?![^>]*alt=)[^>]*>'
+    message: 'Image missing alt text for accessibility'
+    suggestion: 'Add descriptive alt text for screen readers'
+    applies_to: [edm, web]
+
+  # ============================================
+  # FONT FAMILY VALIDATION (NEW)
+  # ============================================
+
+  - id: font_family_001
+    category: brand_compliance
+    severity: critical
+    pattern: 'font-family:\s*["\']?(?!IBM Plex Sans|sans-serif)'
+    message: 'Invalid font family for PB_Font files'
+    suggestion: 'Use "IBM Plex Sans, sans-serif" for PB_Font files'
+    applies_to: [edm, web]
+
+  - id: font_family_002
+    category: brand_compliance
+    severity: critical
+    pattern: 'font-family:\s*["\']?(?!Plus Jakarta Sans)'
+    message: 'Invalid font family for non-PB_Font files'
+    suggestion: 'Use "Plus Jakarta Sans" for regular files'
+    applies_to: [edm, web]
+
+  # ============================================
+  # COLOR VALIDATION (NEW)
+  # ============================================
+
+  - id: color_001
+    category: brand_compliance
+    severity: critical
+    pattern: '#(?!072447|FFFFFF|ffffff|e8e7ec|E8E7EC)[0-9a-fA-F]{6}'
+    message: 'Unauthorized color code detected'
+    suggestion: 'Only allowed colors: #072447, #FFFFFF, #e8e7ec'
+    applies_to: [edm, web]
+
+  # ============================================
+  # CUSTOM VARIABLE FORMAT (NEW)
+  # ============================================
+
+  - id: variable_format_001
+    category: brand_compliance
+    severity: critical
+    pattern: '\[Field:\s*[A-Za-z0-9_]+\]'
+    message: 'Custom variable must follow exact format: [Field: VariableName]'
+    suggestion: 'Correct: [Field: First Name] | Wrong: [Field:FirstName]'
+    applies_to: [edm, web]
+
+  - id: variable_format_002
+    category: brand_compliance
+    severity: critical
+    pattern: '\[Field:[A-Za-z]'
+    message: 'Missing space after colon in custom variable'
+    suggestion: 'Format must be [Field: VariableName] with space after colon'
+    applies_to: [edm, web]
+
+  # ============================================
+  # STAGING URL DETECTION (NEW)
+  # ============================================
+
+  - id: staging_url_001
+    category: deployment
+    severity: critical
+    pattern: '(staging|test|dev|qa)\.emiratesnbd\.com'
+    message: 'Staging/test URL detected - must use production URLs'
+    suggestion: 'Replace with www.emiratesnbd.com'
+    applies_to: [edm, web]
+
+  - id: production_url_001
+    category: deployment
+    severity: low
+    pattern: '(?<!www\.|cdn\.|research\.)emiratesnbd\.com'
+    message: 'URL should use proper subdomain'
+    suggestion: 'Use www.emiratesnbd.com or cdn.emiratesnbd.com'
+    context_exceptions:
+      - 'www.emiratesnbd.com'
+      - 'cdn.emiratesnbd.com'
+      - 'www.emiratesislamic.ae'
+      - 'emiratesnbdresearch'
+    applies_to: [edm, web]
+
+  # ============================================
+  # ADDITIONAL RULES
+  # ============================================
+
+  - id: brand_term_003
+    category: brand_compliance
+    severity: medium
+    pattern: '\bcash back\b'
+    replacement: 'cashback'
+    message: 'Use "cashback" as one word'
+    applies_to: [edm, web, social]
+
+  - id: brand_term_004
+    category: brand_compliance
+    severity: high
+    pattern: '\bcredit card\b(?! [a-z])'
+    message: 'Credit card mentions should specify the product'
+    suggestion: 'Examples: "Visa Credit Card", "Mastercard Credit Card"'
+    applies_to: [edm, web]
+
+  - id: numerical_format_001
+    category: numerical_format
+    severity: medium
+    pattern: '\b\d{5,}(?![,\s])'
+    message: 'Large numbers should use thousand separators'
+    suggestion: 'Format as "10,000" not "10000"'
+    applies_to: [edm, web, document]
+
+  - id: utm_tracking_001
+    category: utm_tracking
+    severity: medium
+    pattern: '<a[^>]+href="http[^>]*"[^>]*>(?!.*utm_)'
+    message: 'External links should include UTM tracking parameters'
+    suggestion: 'Add: utm_source=edm&utm_medium=email&utm_campaign=name'
+    applies_to: [edm]
+
+  - id: email_format_001
+    category: contact_info
+    severity: high
+    pattern: '[a-zA-Z0-9._%+-]+@(?!emiratesnbd\.com|emiratesislamic\.ae)[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
+    message: 'Use official Emirates NBD email addresses only'
+    suggestion: 'Contact emails should be @emiratesnbd.com or @emiratesislamic.ae'
+    applies_to: [edm, web]
+
+  - id: phone_format_001
+    category: contact_info
+    severity: medium
+    pattern: '\b\d{3}-\d{3}-\d{4}\b'
+    message: 'Phone numbers should follow UAE format'
+    suggestion: 'Use format: +971 X XXX XXXX or 600 XXX XXX'
+    applies_to: [edm, web, document]
+
+  - id: compliance_001
+    category: legal_compliance
+    severity: high
+    pattern: '\b(T&C|terms & conditions)\b'
+    message: 'Terms and Conditions should be fully spelled out'
+    suggestion: 'Use "Terms and Conditions" in full'
+    applies_to: [edm, web]

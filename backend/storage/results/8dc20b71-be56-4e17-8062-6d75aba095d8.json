@@ -1,0 +1,132 @@
+{
+  "id": "8dc20b71-be56-4e17-8062-6d75aba095d8",
+  "fileName": "text-check",
+  "fileType": "text",
+  "status": "completed",
+  "extractedText": "Amazing offer! Get awesome interest rate at AED5000 per month. Click here to apply!",
+  "language": "eng",
+  "ocrUsed": false,
+  "issues": {
+    "grammar": [
+      {
+        "type": "grammar",
+        "message": "The phrase 'interest rate at AED5000 per month' may be misleading or incorrect.",
+        "original": "Get awesome interest rate at AED5000 per month.",
+        "suggestion": "Get an awesome interest rate for only AED5000 per month.",
+        "severity": "high"
+      }
+    ],
+    "brand": [
+      {
+        "rule_id": "brand_term_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "Use \"profit rate\" instead of \"interest rate\" for Sharia compliance",
+        "original": "interest rate",
+        "position": 27,
+        "length": 13,
+        "suggestion": "profit rate"
+      }
+    ],
+    "numerical": [
+      {
+        "rule_id": "currency_format_001",
+        "type": "brand_compliance",
+        "category": "numerical_format",
+        "severity": "high",
+        "message": "Currency should have space between code and amount",
+        "original": "AED5000",
+        "position": 44,
+        "length": 7,
+        "suggestion": "Format as \"AED 1,000\" not \"AED1000\""
+      },
+      {
+        "rule_id": "currency_format_001",
+        "type": "formatting",
+        "category": "numerical_format",
+        "severity": "high",
+        "message": "Currency should have space: \"AED 5000\"",
+        "original": "AED5000",
+        "suggestion": "AED 5000",
+        "position": 44
+      }
+    ],
+    "links": [],
+    "images": [],
+    "cta": [
+      {
+        "rule_id": "cta_001",
+        "type": "brand_compliance",
+        "category": "cta",
+        "severity": "medium",
+        "message": "Generic CTA detected - use more specific and action-oriented text",
+        "original": "Click here",
+        "position": 63,
+        "length": 10,
+        "suggestion": "Examples: \"Apply Now\", \"Start Earning Rewards\", \"Get Your Free Quote\""
+      },
+      {
+        "rule_id": "cta_optimization",
+        "type": "cta_optimization",
+        "category": "cta",
+        "severity": "medium",
+        "message": "Generic CTA detected",
+        "original": "",
+        "suggestion": "Use action-oriented CTAs: \"Apply Now\", \"Start Earning\", \"Get Your Quote\""
+      }
+    ],
+    "tone": [
+      {
+        "rule_id": "tone_001",
+        "type": "brand_compliance",
+        "category": "tone",
+        "severity": "medium",
+        "message": "Avoid overly casual language in financial communications",
+        "original": "Amazing",
+        "position": 0,
+        "length": 7,
+        "suggestion": "Use professional alternatives: \"excellent\", \"exceptional\", \"outstanding\""
+      },
+      {
+        "rule_id": "tone_001",
+        "type": "brand_compliance",
+        "category": "tone",
+        "severity": "medium",
+        "message": "Avoid overly casual language in financial communications",
+        "original": "awesome",
+        "position": 19,
+        "length": 7,
+        "suggestion": "Use professional alternatives: \"excellent\", \"exceptional\", \"outstanding\""
+      }
+    ],
+    "legal": [],
+    "accessibility": [
+      {
+        "rule_id": "accessibility_001",
+        "type": "brand_compliance",
+        "category": "accessibility",
+        "severity": "medium",
+        "message": "Link text should be descriptive for screen readers",
+        "original": "Click here",
+        "position": 63,
+        "length": 10,
+        "suggestion": "Use meaningful link text that describes the destination"
+      }
+    ]
+  },
+  "metrics": {
+    "totalIssues": 9,
+    "criticalIssues": 1,
+    "highIssues": 3,
+    "mediumIssues": 5,
+    "lowIssues": 0,
+    "complianceScore": 25
+  },
+  "suggestions": [
+    "Clarify the offer by specifying the interest rate and confirming that AED5000 refers to monthly payments, not the rate itself.",
+    "Use more specific and professional language to describe the offer, avoiding vague terms like 'awesome'."
+  ],
+  "processingTime": 8775,
+  "timestamp": "2025-11-02T11:10:00.712Z"
+}

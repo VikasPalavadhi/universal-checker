@@ -1,0 +1,428 @@
+{
+  "id": "d21e522b-0d69-4896-bcdc-92debdec297a",
+  "fileName": "test-all-validations.html",
+  "fileType": "html",
+  "status": "completed",
+  "extractedText": "UAT Testing - All Validations Comprehensive Validation Test Staging URLs (Should flag as CRITICAL) Staging Link 1 Staging Link 2 Test Link Dev Link QA Link Dynamic Fields (Should be ALLOWED, no errors) Dynamic Field 1 Dynamic Field 2 Dynamic Field 3 Variable Names (Should flag case mismatches as CRITICAL) Wrong: LastName Wrong: firstname Wrong: LAST NAME Wrong: Pseudo Id Wrong: No space after colon Correct: First Name Correct: Last Name Correct: Pseudo ID URL Spaces (Should flag as CRITICAL) Spa",
+  "language": "eng",
+  "ocrUsed": false,
+  "ocrConfidence": 0,
+  "issues": {
+    "grammar": [
+      {
+        "type": "grammar",
+        "message": "Redundant acronym explanation",
+        "original": "UAT Testing",
+        "suggestion": "UAT (User Acceptance Testing)",
+        "severity": "medium"
+      },
+      {
+        "type": "grammar",
+        "message": "Inconsistent capitalization in variable names",
+        "original": "Wrong: LastName, firstname, LAST NAME, Pseudo Id, No space after colon",
+        "suggestion": "Correct: Last Name, First Name, Last Name, Pseudo ID",
+        "severity": "high"
+      },
+      {
+        "type": "grammar",
+        "message": "Missing punctuation",
+        "original": "Wrong: No space after colon",
+        "suggestion": "Correct: No space after colon.",
+        "severity": "low"
+      },
+      {
+        "type": "grammar",
+        "message": "Use of 'click here' is not recommended for accessibility reasons",
+        "original": "Click here",
+        "suggestion": "Use descriptive link text",
+        "severity": "medium"
+      }
+    ],
+    "brand": [],
+    "numerical": [],
+    "links": [
+      {
+        "rule_id": "link_missing_href_001",
+        "type": "link_validation",
+        "category": "broken_links",
+        "severity": "critical",
+        "message": "Link missing href attribute",
+        "found": "no href attribute",
+        "link_text": "No href attribute",
+        "original": "<a>No href attribute</a>",
+        "suggestion": "Add href attribute with valid URL"
+      },
+      {
+        "rule_id": "link_empty_href_001",
+        "type": "link_validation",
+        "category": "broken_links",
+        "severity": "critical",
+        "message": "Link has empty href attribute",
+        "found": "href=\"\"",
+        "link_text": "Empty href",
+        "original": "<a href=\"\">Empty href</a>",
+        "suggestion": "Add valid URL to href attribute"
+      },
+      {
+        "rule_id": "utm_tracking_001",
+        "type": "link_validation",
+        "category": "utm_tracking",
+        "severity": "medium",
+        "message": "Link missing UTM tracking parameters",
+        "found": "https://staging.emiratesnbd.com/offers",
+        "link_text": "Staging Link 2",
+        "original": "https://staging.emiratesnbd.com/offers",
+        "suggestion": "Add tracking: https://staging.emiratesnbd.com/offers?utm_source=edm&utm_medium=email"
+      },
+      {
+        "rule_id": "utm_tracking_001",
+        "type": "link_validation",
+        "category": "utm_tracking",
+        "severity": "medium",
+        "message": "Link missing UTM tracking parameters",
+        "found": "https://test.emiratesnbd.com",
+        "link_text": "Test Link",
+        "original": "https://test.emiratesnbd.com",
+        "suggestion": "Add tracking: https://test.emiratesnbd.com?utm_source=edm&utm_medium=email"
+      },
+      {
+        "rule_id": "utm_tracking_001",
+        "type": "link_validation",
+        "category": "utm_tracking",
+        "severity": "medium",
+        "message": "Link missing UTM tracking parameters",
+        "found": "https://qa.emiratesnbd.com",
+        "link_text": "QA Link",
+        "original": "https://qa.emiratesnbd.com",
+        "suggestion": "Add tracking: https://qa.emiratesnbd.com?utm_source=edm&utm_medium=email"
+      },
+      {
+        "rule_id": "utm_tracking_001",
+        "type": "link_validation",
+        "category": "utm_tracking",
+        "severity": "medium",
+        "message": "Link missing UTM tracking parameters",
+        "found": "https://www.emiratesnbd.com?name=[Field: First Name]",
+        "link_text": "Dynamic Field 1",
+        "original": "https://www.emiratesnbd.com?name=[Field: First Name]",
+        "suggestion": "Add tracking: https://www.emiratesnbd.com?name=[Field: First Name]&utm_source=edm&utm_medium=email"
+      },
+      {
+        "rule_id": "utm_tracking_001",
+        "type": "link_validation",
+        "category": "utm_tracking",
+        "severity": "medium",
+        "message": "Link missing UTM tracking parameters",
+        "found": "https://www.emiratesnbd.com?id=[Field: Pseudo ID]",
+        "link_text": "Dynamic Field 2",
+        "original": "https://www.emiratesnbd.com?id=[Field: Pseudo ID]",
+        "suggestion": "Add tracking: https://www.emiratesnbd.com?id=[Field: Pseudo ID]&utm_source=edm&utm_medium=email"
+      },
+      {
+        "rule_id": "utm_tracking_001",
+        "type": "link_validation",
+        "category": "utm_tracking",
+        "severity": "medium",
+        "message": "Link missing UTM tracking parameters",
+        "found": "https://www.emiratesnbd.com?email=[Field: Email]&name=[Field: Last Name]",
+        "link_text": "Dynamic Field 3",
+        "original": "https://www.emiratesnbd.com?email=[Field: Email]&name=[Field: Last Name]",
+        "suggestion": "Add tracking: https://www.emiratesnbd.com?email=[Field: Email]&name=[Field: Last Name]&utm_source=edm&utm_medium=email"
+      },
+      {
+        "rule_id": "url_malformed_001",
+        "type": "link_validation",
+        "category": "broken_links",
+        "severity": "critical",
+        "message": "URL contains spaces (not part of dynamic field)",
+        "found": "https://exam ple.com",
+        "link_text": "Space in domain",
+        "original": "https://exam ple.com",
+        "suggestion": "Fix URL format before deployment"
+      },
+      {
+        "rule_id": "url_malformed_001",
+        "type": "link_validation",
+        "category": "broken_links",
+        "severity": "critical",
+        "message": "URL contains spaces (not part of dynamic field)",
+        "found": "https://example .com",
+        "link_text": "Space before TLD",
+        "original": "https://example .com",
+        "suggestion": "Fix URL format before deployment"
+      },
+      {
+        "rule_id": "url_malformed_001",
+        "type": "link_validation",
+        "category": "broken_links",
+        "severity": "critical",
+        "message": "URL contains spaces (not part of dynamic field)",
+        "found": "https://example.com/page name",
+        "link_text": "Space in path",
+        "original": "https://example.com/page name",
+        "suggestion": "Fix URL format before deployment"
+      },
+      {
+        "rule_id": "url_malformed_001",
+        "type": "link_validation",
+        "category": "broken_links",
+        "severity": "critical",
+        "message": "Malformed URL with extra dashes (---https://)",
+        "found": "---https://example.com",
+        "link_text": "Triple dash",
+        "original": "---https://example.com",
+        "suggestion": "Fix URL format before deployment"
+      },
+      {
+        "rule_id": "url_invalid_001",
+        "type": "link_validation",
+        "category": "broken_links",
+        "severity": "high",
+        "message": "Invalid URL format",
+        "found": "https::example.com",
+        "link_text": "Double colon",
+        "original": "https::example.com",
+        "suggestion": "Check URL syntax and structure"
+      },
+      {
+        "rule_id": "url_malformed_001",
+        "type": "link_validation",
+        "category": "broken_links",
+        "severity": "critical",
+        "message": "Malformed URL missing second slash (https:/)",
+        "found": "https:/example.com",
+        "link_text": "Missing slash",
+        "original": "https:/example.com",
+        "suggestion": "Fix URL format before deployment"
+      },
+      {
+        "rule_id": "url_malformed_001",
+        "type": "link_validation",
+        "category": "broken_links",
+        "severity": "critical",
+        "message": "Malformed URL with triple slashes (https:///)",
+        "found": "https:///example.com",
+        "link_text": "Triple slash",
+        "original": "https:///example.com",
+        "suggestion": "Fix URL format before deployment"
+      },
+      {
+        "rule_id": "url_malformed_001",
+        "type": "link_validation",
+        "category": "broken_links",
+        "severity": "critical",
+        "message": "URL contains invalid characters (<>)",
+        "found": "https://example.com/<test>",
+        "link_text": "Invalid chars",
+        "original": "https://example.com/<test>",
+        "suggestion": "Fix URL format before deployment"
+      },
+      {
+        "rule_id": "link_validation_001",
+        "type": "link_validation",
+        "category": "broken_links",
+        "severity": "critical",
+        "message": "Placeholder link detected (not a real URL)",
+        "found": "#",
+        "link_text": "Hash placeholder",
+        "original": "#",
+        "suggestion": "Replace with actual destination URL"
+      },
+      {
+        "rule_id": "link_validation_001",
+        "type": "link_validation",
+        "category": "broken_links",
+        "severity": "critical",
+        "message": "Placeholder link detected (not a real URL)",
+        "found": "javascript:void(0)",
+        "link_text": "JavaScript void",
+        "original": "javascript:void(0)",
+        "suggestion": "Replace with actual destination URL"
+      },
+      {
+        "rule_id": "utm_tracking_001",
+        "type": "link_validation",
+        "category": "utm_tracking",
+        "severity": "medium",
+        "message": "Link missing UTM tracking parameters",
+        "found": "https://www.emiratesnbd.com",
+        "link_text": "Click here",
+        "original": "https://www.emiratesnbd.com",
+        "suggestion": "Add tracking: https://www.emiratesnbd.com?utm_source=edm&utm_medium=email"
+      },
+      {
+        "rule_id": "utm_tracking_001",
+        "type": "link_validation",
+        "category": "utm_tracking",
+        "severity": "medium",
+        "message": "Link missing UTM tracking parameters",
+        "found": "https://www.emiratesnbd.com",
+        "link_text": "here",
+        "original": "https://www.emiratesnbd.com",
+        "suggestion": "Add tracking: https://www.emiratesnbd.com?utm_source=edm&utm_medium=email"
+      },
+      {
+        "rule_id": "utm_tracking_001",
+        "type": "link_validation",
+        "category": "utm_tracking",
+        "severity": "medium",
+        "message": "Link missing UTM tracking parameters",
+        "found": "https://www.emiratesnbd.com",
+        "link_text": "",
+        "original": "https://www.emiratesnbd.com",
+        "suggestion": "Add tracking: https://www.emiratesnbd.com?utm_source=edm&utm_medium=email"
+      },
+      {
+        "rule_id": "utm_tracking_001",
+        "type": "link_validation",
+        "category": "utm_tracking",
+        "severity": "medium",
+        "message": "Link missing UTM tracking parameters",
+        "found": "https://www.emiratesnbd.com/ar/offers",
+        "link_text": "Arabic link in English content",
+        "original": "https://www.emiratesnbd.com/ar/offers",
+        "suggestion": "Add tracking: https://www.emiratesnbd.com/ar/offers?utm_source=edm&utm_medium=email"
+      },
+      {
+        "rule_id": "utm_tracking_001",
+        "type": "link_validation",
+        "category": "utm_tracking",
+        "severity": "medium",
+        "message": "Link missing UTM tracking parameters",
+        "found": "https://www.emiratesnbd.com/arabic/page",
+        "link_text": "Arabic link 2",
+        "original": "https://www.emiratesnbd.com/arabic/page",
+        "suggestion": "Add tracking: https://www.emiratesnbd.com/arabic/page?utm_source=edm&utm_medium=email"
+      },
+      {
+        "rule_id": "utm_tracking_001",
+        "type": "link_validation",
+        "category": "utm_tracking",
+        "severity": "medium",
+        "message": "Link missing UTM tracking parameters",
+        "found": "https://www.emiratesnbd.com/offers",
+        "link_text": "No UTM",
+        "original": "https://www.emiratesnbd.com/offers",
+        "suggestion": "Add tracking: https://www.emiratesnbd.com/offers?utm_source=edm&utm_medium=email"
+      },
+      {
+        "rule_id": "utm_tracking_001",
+        "type": "link_validation",
+        "category": "utm_tracking",
+        "severity": "medium",
+        "message": "Link missing UTM tracking parameters",
+        "found": "https://www.emiratesnbd.com/offers",
+        "link_text": "Production URL",
+        "original": "https://www.emiratesnbd.com/offers",
+        "suggestion": "Add tracking: https://www.emiratesnbd.com/offers?utm_source=edm&utm_medium=email"
+      },
+      {
+        "rule_id": "utm_tracking_001",
+        "type": "link_validation",
+        "category": "utm_tracking",
+        "severity": "medium",
+        "message": "Link missing UTM tracking parameters",
+        "found": "https://www.emiratesnbd.com?user=[Field: Email]",
+        "link_text": "Correct Variable",
+        "original": "https://www.emiratesnbd.com?user=[Field: Email]",
+        "suggestion": "Add tracking: https://www.emiratesnbd.com?user=[Field: Email]&utm_source=edm&utm_medium=email"
+      }
+    ],
+    "images": [
+      {
+        "rule_id": "image_validation_001",
+        "type": "image_validation",
+        "category": "broken_images",
+        "severity": "critical",
+        "message": "Broken or placeholder image detected",
+        "found": "missing src",
+        "original": "",
+        "suggestion": "Provide valid image URL"
+      }
+    ],
+    "cta": [
+      {
+        "rule_id": "cta_optimization",
+        "type": "cta_optimization",
+        "category": "cta",
+        "severity": "medium",
+        "message": "Generic CTA detected",
+        "original": "",
+        "suggestion": "Use action-oriented CTAs: \"Apply Now\", \"Start Earning\", \"Get Your Quote\""
+      }
+    ],
+    "tone": [],
+    "legal": [],
+    "accessibility": [
+      {
+        "rule_id": "accessibility_001",
+        "type": "accessibility",
+        "category": "link_accessibility",
+        "severity": "medium",
+        "message": "Link text should be descriptive for screen readers",
+        "found": "https://www.emiratesnbd.com",
+        "link_text": "Click here",
+        "original": "Click here",
+        "suggestion": "Use meaningful text that describes the destination"
+      },
+      {
+        "rule_id": "accessibility_001",
+        "type": "accessibility",
+        "category": "link_accessibility",
+        "severity": "medium",
+        "message": "Link text should be descriptive for screen readers",
+        "found": "https://www.emiratesnbd.com",
+        "link_text": "here",
+        "original": "here",
+        "suggestion": "Use meaningful text that describes the destination"
+      },
+      {
+        "rule_id": "link_no_text_001",
+        "type": "accessibility",
+        "category": "link_accessibility",
+        "severity": "high",
+        "message": "Link has no visible text (accessibility issue)",
+        "found": "https://www.emiratesnbd.com",
+        "link_text": "(empty)",
+        "original": "https://www.emiratesnbd.com",
+        "suggestion": "Add descriptive link text"
+      },
+      {
+        "rule_id": "accessibility_002",
+        "type": "accessibility",
+        "category": "image_accessibility",
+        "severity": "high",
+        "message": "Image missing alt text for accessibility",
+        "found": "banner.jpg",
+        "original": "",
+        "suggestion": "Add descriptive alt text for screen readers"
+      },
+      {
+        "rule_id": "accessibility_002",
+        "type": "accessibility",
+        "category": "image_accessibility",
+        "severity": "high",
+        "message": "Image missing alt text for accessibility",
+        "found": "",
+        "original": "",
+        "suggestion": "Add descriptive alt text for screen readers"
+      }
+    ]
+  },
+  "metrics": {
+    "totalIssues": 37,
+    "criticalIssues": 12,
+    "highIssues": 5,
+    "mediumIssues": 19,
+    "lowIssues": 1,
+    "complianceScore": 0
+  },
+  "suggestions": [
+    "Consider revising the acronym 'UAT Testing' to avoid redundancy and ensure clarity.",
+    "Standardize the capitalization in variable names to maintain consistency and professionalism.",
+    "Improve accessibility by replacing generic link text like 'click here' with descriptive text.",
+    "Ensure all grammar and punctuation are correct to maintain a high level of professionalism."
+  ],
+  "processingTime": 10761,
+  "timestamp": "2025-11-02T15:00:23.230Z"
+}

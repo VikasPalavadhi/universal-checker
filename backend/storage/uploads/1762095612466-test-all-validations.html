@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>UAT Testing - All Validations</title>
+  <style>
+    /* WRONG FONT (should be Plus Jakarta Sans for regular files) */
+    body { 
+      font-family: "Arial", sans-serif;
+      color: #FF0000;  /* WRONG COLOR - not in allowed list */
+      background: #000000;  /* WRONG COLOR - not in allowed list */
+    }
+    
+    .header {
+      background-color: #072447;  /* CORRECT COLOR - allowed */
+    }
+  </style>
+</head>
+<body>
+
+<h1>Comprehensive Validation Test</h1>
+
+<!-- ===============================
+     STAGING URL TESTS (CRITICAL)
+     =============================== -->
+<section>
+  <h2>Staging URLs (Should flag as CRITICAL)</h2>
+  
+  <!-- Test 1: Staging without protocol -->
+  <a href="staging.emiratesnbd.com">Staging Link 1</a>
+  
+  <!-- Test 2: Staging with https -->
+  <a href="https://staging.emiratesnbd.com/offers">Staging Link 2</a>
+  
+  <!-- Test 3: Test environment -->
+  <a href="https://test.emiratesnbd.com">Test Link</a>
+  
+  <!-- Test 4: Dev environment -->
+  <a href="dev.emiratesnbd.com/page">Dev Link</a>
+  
+  <!-- Test 5: QA environment -->
+  <a href="https://qa.emiratesnbd.com">QA Link</a>
+</section>
+
+<!-- ===============================
+     DYNAMIC FIELDS WITH SPACES (ALLOWED)
+     =============================== -->
+<section>
+  <h2>Dynamic Fields (Should be ALLOWED, no errors)</h2>
+  
+  <!-- Correct: Spaces in dynamic fields are OK -->
+  <a href="https://www.emiratesnbd.com?name=[Field: First Name]">Dynamic Field 1</a>
+  <a href="https://www.emiratesnbd.com?id=[Field: Pseudo ID]">Dynamic Field 2</a>
+  <a href="https://www.emiratesnbd.com?email=[Field: Email]&name=[Field: Last Name]">Dynamic Field 3</a>
+</section>
+
+<!-- ===============================
+     VARIABLE VALIDATION (CASE-SENSITIVE)
+     =============================== -->
+<section>
+  <h2>Variable Names (Should flag case mismatches as CRITICAL)</h2>
+  
+  <!-- WRONG: Case mismatch - should be "Last Name" -->
+  <a href="?name=[Field: LastName]">Wrong: LastName</a>
+  
+  <!-- WRONG: All lowercase - should be "First Name" -->
+  <a href="?name=[Field: firstname]">Wrong: firstname</a>
+  
+  <!-- WRONG: All uppercase - should be "Last Name" -->
+  <a href="?name=[Field: LAST NAME]">Wrong: LAST NAME</a>
+  
+  <!-- WRONG: Wrong case for "Pseudo ID" -->
+  <a href="?id=[Field: Pseudo Id]">Wrong: Pseudo Id</a>
+  
+  <!-- WRONG: Missing space -->
+  <a href="?id=[Field:PseudoID]">Wrong: No space after colon</a>
+  
+  <!-- CORRECT: Exact match -->
+  <a href="?name=[Field: First Name]">Correct: First Name</a>
+  <a href="?name=[Field: Last Name]">Correct: Last Name</a>
+  <a href="?id=[Field: Pseudo ID]">Correct: Pseudo ID</a>
+</section>
+
+<!-- ===============================
+     URL SPACES (WITHOUT DYNAMIC FIELDS)
+     =============================== -->
+<section>
+  <h2>URL Spaces (Should flag as CRITICAL)</h2>
+  
+  <!-- WRONG: Space in URL (not part of dynamic field) -->
+  <a href="https://exam ple.com">Space in domain</a>
+  <a href="https://example .com">Space before TLD</a>
+  <a href="https://example.com/page name">Space in path</a>
+</section>
+
+<!-- ===============================
+     MALFORMED URLs
+     =============================== -->
+<section>
+  <h2>Malformed URLs (Should flag as CRITICAL)</h2>
+  
+  <!-- Extra dashes -->
+  <a href="---https://example.com">Triple dash</a>
+  
+  <!-- Double colons -->
+  <a href="https::example.com">Double colon</a>
+  
+  <!-- Missing slash -->
+  <a href="https:/example.com">Missing slash</a>
+  
+  <!-- Triple slashes -->
+  <a href="https:///example.com">Triple slash</a>
+  
+  <!-- Invalid characters -->
+  <a href="https://example.com/<test>">Invalid chars</a>
+</section>
+
+<!-- ===============================
+     PLACEHOLDER/BROKEN LINKS
+     =============================== -->
+<section>
+  <h2>Broken Links (Should flag as CRITICAL)</h2>
+  
+  <a href="#">Hash placeholder</a>
+  <a href="">Empty href</a>
+  <a href="javascript:void(0)">JavaScript void</a>
+  <a>No href attribute</a>
+</section>
+
+<!-- ===============================
+     ACCESSIBILITY ISSUES
+     =============================== -->
+<section>
+  <h2>Accessibility (Should flag as MEDIUM/HIGH)</h2>
+  
+  <!-- Generic link text -->
+  <a href="https://www.emiratesnbd.com">Click here</a>
+  <a href="https://www.emiratesnbd.com">here</a>
+  
+  <!-- Empty link text -->
+  <a href="https://www.emiratesnbd.com"></a>
+  
+  <!-- Images without alt text -->
+  <img src="banner.jpg">
+  <img src="">
+</section>
+
+<!-- ===============================
+     LANGUAGE MISMATCH
+     =============================== -->
+<section>
+  <h2>Language Mismatch (English content with Arabic links)</h2>
+  
+  <!-- Should flag as HIGH -->
+  <a href="https://www.emiratesnbd.com/ar/offers">Arabic link in English content</a>
+  <a href="https://www.emiratesnbd.com/arabic/page">Arabic link 2</a>
+</section>
+
+<!-- ===============================
+     MISSING UTM TRACKING
+     =============================== -->
+<section>
+  <h2>Missing UTM Parameters (Should flag as MEDIUM)</h2>
+  
+  <!-- External links without UTM -->
+  <a href="https://www.emiratesnbd.com/offers">No UTM</a>
+  
+  <!-- Correct: Has UTM -->
+  <a href="https://www.emiratesnbd.com/offers?utm_source=edm&utm_medium=email">With UTM</a>
+</section>
+
+<!-- ===============================
+     CORRECT EXAMPLES (NO ERRORS)
+     =============================== -->
+<section>
+  <h2>Correct Examples (Should have NO errors)</h2>
+  
+  <!-- Correct production URL -->
+  <a href="https://www.emiratesnbd.com/offers">Production URL</a>
+  
+  <!-- Correct CDN URL -->
+  <img src="https://cdn.emiratesnbd.com/images/banner.jpg" alt="Emirates NBD Banner">
+  
+  <!-- Correct variable format -->
+  <a href="https://www.emiratesnbd.com?user=[Field: Email]">Correct Variable</a>
+  
+  <!-- Mailto and tel (should be ignored for UTM) -->
+  <a href="mailto:info@emiratesnbd.com">Email</a>
+  <a href="tel:+971600540000">Phone</a>
+</section>
+
+</body>
+</html>
