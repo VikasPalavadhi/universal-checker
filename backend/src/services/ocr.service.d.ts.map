@@ -1,0 +1,1 @@
+{"version":3,"file":"ocr.service.d.ts","sourceRoot":"","sources":["ocr.service.ts"],"names":[],"mappings":"AAEA,UAAU,SAAS;IACjB,IAAI,EAAE,MAAM,CAAC;IACb,UAAU,EAAE,MAAM,CAAC;CACpB;AAED,cAAM,UAAU;IACR,WAAW,CAAC,SAAS,EAAE,MAAM,GAAG,OAAO,CAAC,SAAS,CAAC;CAmBzD;AAED,eAAO,MAAM,UAAU,YAAmB,CAAC"}

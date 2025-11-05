@@ -1,0 +1,574 @@
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.checkerService = void 0;
+const ocr_service_1 = require("./ocr.service");
+const openai_service_1 = require("./openai.service");
+const rules_engine_service_1 = require("./rules-engine.service");
+const url_scraper_service_1 = require("./url-scraper.service");
+const seo_analyzer_service_1 = require("./seo-analyzer.service");
+const fs = __importStar(require("fs"));
+const path = __importStar(require("path"));
+const uuid_1 = require("uuid");
+class CheckerService {
+    /**
+     * Main check method - processes any file type
+     * ⭐ ENHANCED: Now detects multiple languages and tags issues by language
+     */
+    async checkFile(filePath, fileName) {
+        const startTime = Date.now();
+        const fileExt = fileName.split('.').pop()?.toLowerCase();
+        const checkId = (0, uuid_1.v4)();
+        try {
+            let text = '';
+            let html = '';
+            let ocrUsed = false;
+            let ocrConfidence = 0;
+            // Extract text based on file type
+            if (fileExt === 'html' || fileExt === 'htm') {
+                const htmlContent = fs.readFileSync(filePath, 'utf-8');
+                text = this.extractTextFromHTML(htmlContent);
+                html = htmlContent;
+                ocrUsed = false;
+            }
+            else if (['jpg', 'jpeg', 'png'].includes(fileExt || '')) {
+                const ocrResult = await ocr_service_1.ocrService.extractText(filePath);
+                text = ocrResult.text;
+                ocrUsed = true;
+                ocrConfidence = ocrResult.confidence || 0;
+            }
+            else {
+                throw new Error('Unsupported file type');
+            }
+            if (!text || text.trim().length === 0) {
+                throw new Error('No text could be extracted from file');
+            }
+            // ⭐ ENHANCED: Detect ALL languages present
+            const languages = this.detectLanguages(html || text);
+            const isBilingual = languages.length > 1;
+            const primaryLanguage = languages[0] || 'eng';
+            // ⭐ NEW: Split HTML into language sections if bilingual
+            const sections = isBilingual && html ? this.splitByLanguageSections(html) : null;
+            // Run all checks in parallel for better performance
+            const [aiResult, brandIssues, numericalIssues, ctaIssues, linkIssues, imageIssues, customVariableIssues, fontIssues, colorIssues, stagingUrlIssues] = await Promise.all([
+                // OpenAI grammar and content check
+                openai_service_1.openaiService.checkContent(text, primaryLanguage),
+                // Rules engine brand compliance
+                Promise.resolve(rules_engine_service_1.rulesEngine.checkText(text, 'edm')),
+                // Numerical format check
+                Promise.resolve(rules_engine_service_1.rulesEngine.checkNumericalFormats(text)),
+                // CTA optimization check
+                Promise.resolve(rules_engine_service_1.rulesEngine.checkCTA(text)),
+                // Link validation (if HTML)
+                html ? Promise.resolve(rules_engine_service_1.rulesEngine.validateLinks(html, primaryLanguage)) : Promise.resolve([]),
+                // Image validation (if HTML)
+                html ? Promise.resolve(rules_engine_service_1.rulesEngine.validateImages(html)) : Promise.resolve([]),
+                // ⭐ Custom variable validation (CASE-SENSITIVE)
+                Promise.resolve(rules_engine_service_1.rulesEngine.validateCustomVariables(text)),
+                // ⭐ Font family validation (if HTML)
+                html ? Promise.resolve(rules_engine_service_1.rulesEngine.validateFontFamily(html, fileName)) : Promise.resolve([]),
+                // ⭐ Color validation (if HTML)
+                html ? Promise.resolve(rules_engine_service_1.rulesEngine.validateColors(html)) : Promise.resolve([]),
+                // ⭐ Staging URL detection (CRITICAL)
+                html ? Promise.resolve(rules_engine_service_1.rulesEngine.validateProductionUrls(html)) : Promise.resolve([])
+            ]);
+            // Combine all issues
+            let allIssues = [
+                ...aiResult.grammarIssues,
+                ...aiResult.brandIssues,
+                ...brandIssues,
+                ...numericalIssues,
+                ...ctaIssues,
+                ...linkIssues,
+                ...imageIssues,
+                ...customVariableIssues,
+                ...fontIssues,
+                ...colorIssues,
+                ...stagingUrlIssues
+            ];
+            // ⭐ NEW: Tag each issue with language if bilingual
+            if (isBilingual && sections) {
+                allIssues = this.tagIssuesWithLanguage(allIssues, sections, html || text);
+            }
+            // Categorize all issues
+            const categorizedIssues = this.categorizeIssues(allIssues);
+            // ⭐ NEW: Group issues by language
+            const issuesByLanguage = isBilingual ? this.groupIssuesByLanguage(allIssues) : undefined;
+            // Calculate metrics
+            const metrics = this.calculateMetrics(categorizedIssues, issuesByLanguage);
+            // Build result
+            const result = {
+                id: checkId,
+                fileName,
+                fileType: fileExt || 'unknown',
+                status: 'completed',
+                extractedText: text.substring(0, 500),
+                language: primaryLanguage,
+                languages, // ⭐ NEW
+                isBilingual, // ⭐ NEW
+                ocrUsed,
+                ocrConfidence,
+                issues: categorizedIssues,
+                issuesByLanguage, // ⭐ NEW
+                metrics,
+                suggestions: aiResult.suggestions || [],
+                processingTime: Date.now() - startTime,
+                timestamp: new Date().toISOString()
+            };
+            // Save result to file
+            await this.saveResult(result);
+            return result;
+        }
+        catch (error) {
+            throw new Error(`Check failed: ${error.message}`);
+        }
+    }
+    /**
+     * ⭐ NEW: Detect ALL languages in content
+     */
+    detectLanguages(text) {
+        const languages = [];
+        // Check for Arabic Unicode characters
+        if (/[\u0600-\u06FF]/.test(text)) {
+            languages.push('ara');
+        }
+        // Check for Latin characters (English and other Latin-script languages)
+        if (/[a-zA-Z]/.test(text)) {
+            languages.push('eng');
+        }
+        // Return in order of appearance (English usually comes first)
+        return languages.length > 0 ? languages : ['eng'];
+    }
+    /**
+     * ⭐ NEW: Split HTML into language sections
+     */
+    splitByLanguageSections(html) {
+        // Look for common bilingual EDM patterns
+        const arabicAnchorMatch = html.match(/<a[^>]*name=["']m_arabic["'][^>]*>/i);
+        if (arabicAnchorMatch) {
+            const arabicStart = arabicAnchorMatch.index || 0;
+            return {
+                english: html.substring(0, arabicStart),
+                arabic: html.substring(arabicStart)
+            };
+        }
+        // Alternative: Split by dir="rtl" attribute
+        const rtlMatch = html.match(/dir=["']rtl["']/i);
+        if (rtlMatch && rtlMatch.index) {
+            // Find the start of the table/div containing this attribute
+            const searchStart = Math.max(0, rtlMatch.index - 200);
+            const sectionStart = html.lastIndexOf('<table', rtlMatch.index) ||
+                html.lastIndexOf('<div', rtlMatch.index) ||
+                rtlMatch.index;
+            return {
+                english: html.substring(0, sectionStart),
+                arabic: html.substring(sectionStart)
+            };
+        }
+        // If no clear split, detect by content
+        const lines = html.split('\n');
+        let englishSection = '';
+        let arabicSection = '';
+        let inArabicSection = false;
+        for (const line of lines) {
+            if (/[\u0600-\u06FF]/.test(line) && !inArabicSection) {
+                inArabicSection = true;
+            }
+            if (inArabicSection) {
+                arabicSection += line + '\n';
+            }
+            else {
+                englishSection += line + '\n';
+            }
+        }
+        return { english: englishSection, arabic: arabicSection };
+    }
+    /**
+     * ⭐ NEW: Tag each issue with the language it belongs to
+     */
+    tagIssuesWithLanguage(issues, sections, fullText) {
+        return issues.map(issue => {
+            // Determine language based on issue position or context
+            let language = 'both'; // Default to both if unclear
+            if (issue.position !== undefined && issue.position !== null) {
+                // Check if position falls in English or Arabic section
+                if (sections.english && fullText.indexOf(sections.english) === 0) {
+                    const englishEndPos = sections.english.length;
+                    language = issue.position < englishEndPos ? 'english' : 'arabic';
+                }
+            }
+            else if (issue.context) {
+                // Check context for Arabic characters
+                if (/[\u0600-\u06FF]/.test(issue.context)) {
+                    language = 'arabic';
+                }
+                else if (/[a-zA-Z]/.test(issue.context)) {
+                    language = 'english';
+                }
+            }
+            else if (issue.found) {
+                // Check found text for language
+                if (/[\u0600-\u06FF]/.test(issue.found)) {
+                    language = 'arabic';
+                }
+                else if (/[a-zA-Z]/.test(issue.found)) {
+                    language = 'english';
+                }
+            }
+            return {
+                ...issue,
+                language // ⭐ Add language tag
+            };
+        });
+    }
+    /**
+     * ⭐ NEW: Group issues by language
+     */
+    groupIssuesByLanguage(issues) {
+        const english = [];
+        const arabic = [];
+        const both = [];
+        for (const issue of issues) {
+            if (issue.language === 'english') {
+                english.push(issue);
+            }
+            else if (issue.language === 'arabic') {
+                arabic.push(issue);
+            }
+            else {
+                both.push(issue);
+            }
+        }
+        return { english, arabic, both };
+    }
+    /**
+     * Extract text from HTML, removing tags and scripts
+     */
+    extractTextFromHTML(html) {
+        let text = html.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+        text = text.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
+        text = text.replace(/<[^>]+>/g, ' ');
+        text = text.replace(/&nbsp;/g, ' ');
+        text = text.replace(/&amp;/g, '&');
+        text = text.replace(/&lt;/g, '<');
+        text = text.replace(/&gt;/g, '>');
+        text = text.replace(/&quot;/g, '"');
+        text = text.replace(/&#39;/g, "'");
+        text = text.replace(/\s+/g, ' ').trim();
+        return text;
+    }
+    /**
+     * Categorize issues by type
+     */
+    categorizeIssues(issues) {
+        const categorized = {
+            grammar: [],
+            brand: [],
+            numerical: [],
+            links: [],
+            images: [],
+            cta: [],
+            tone: [],
+            legal: [],
+            accessibility: []
+        };
+        for (const issue of issues) {
+            const category = issue.category || issue.type || 'brand';
+            if (category.includes('grammar') || category.includes('spelling')) {
+                categorized.grammar.push(issue);
+            }
+            else if (category.includes('link') || category.includes('url') || category.includes('utm')) {
+                categorized.links.push(issue);
+            }
+            else if (category.includes('image')) {
+                categorized.images.push(issue);
+            }
+            else if (category.includes('cta')) {
+                categorized.cta.push(issue);
+            }
+            else if (category.includes('tone')) {
+                categorized.tone.push(issue);
+            }
+            else if (category.includes('legal')) {
+                categorized.legal.push(issue);
+            }
+            else if (category.includes('accessibility')) {
+                categorized.accessibility.push(issue);
+            }
+            else if (category.includes('numerical') || category.includes('number')) {
+                categorized.numerical.push(issue);
+            }
+            else {
+                categorized.brand.push(issue);
+            }
+        }
+        return categorized;
+    }
+    /**
+     * Calculate metrics from categorized issues
+     * ⭐ ENHANCED: Now includes language-specific metrics
+     */
+    calculateMetrics(categorizedIssues, issuesByLanguage) {
+        const allIssues = [
+            ...categorizedIssues.grammar,
+            ...categorizedIssues.brand,
+            ...categorizedIssues.numerical,
+            ...categorizedIssues.links,
+            ...categorizedIssues.images,
+            ...categorizedIssues.cta,
+            ...categorizedIssues.tone,
+            ...categorizedIssues.legal,
+            ...categorizedIssues.accessibility
+        ];
+        const criticalIssues = allIssues.filter(i => i.severity === 'critical').length;
+        const highIssues = allIssues.filter(i => i.severity === 'high').length;
+        const mediumIssues = allIssues.filter(i => i.severity === 'medium').length;
+        const lowIssues = allIssues.filter(i => i.severity === 'low').length;
+        const weights = { critical: 20, high: 10, medium: 5, low: 2 };
+        const totalPenalty = (criticalIssues * weights.critical) +
+            (highIssues * weights.high) +
+            (mediumIssues * weights.medium) +
+            (lowIssues * weights.low);
+        const score = Math.max(0, 100 - totalPenalty);
+        const metrics = {
+            totalIssues: allIssues.length,
+            criticalIssues,
+            highIssues,
+            mediumIssues,
+            lowIssues,
+            complianceScore: score
+        };
+        // ⭐ Add language-specific metrics if bilingual
+        if (issuesByLanguage) {
+            metrics.englishIssues = issuesByLanguage.english.length;
+            metrics.arabicIssues = issuesByLanguage.arabic.length;
+        }
+        return metrics;
+    }
+    /**
+     * Save check result to JSON file
+     */
+    async saveResult(result) {
+        const resultsDir = process.env.RESULTS_DIR || './storage/results';
+        if (!fs.existsSync(resultsDir)) {
+            fs.mkdirSync(resultsDir, { recursive: true });
+        }
+        const filePath = path.join(resultsDir, `${result.id}.json`);
+        fs.writeFileSync(filePath, JSON.stringify(result, null, 2));
+    }
+    /**
+     * Get result by ID
+     */
+    async getResult(id) {
+        const resultsDir = process.env.RESULTS_DIR || './storage/results';
+        const filePath = path.join(resultsDir, `${id}.json`);
+        if (fs.existsSync(filePath)) {
+            const data = fs.readFileSync(filePath, 'utf-8');
+            return JSON.parse(data);
+        }
+        return null;
+    }
+    /**
+     * Get recent check history
+     */
+    async getHistory(limit = 10) {
+        const resultsDir = process.env.RESULTS_DIR || './storage/results';
+        if (!fs.existsSync(resultsDir)) {
+            return [];
+        }
+        const files = fs.readdirSync(resultsDir)
+            .filter(f => f.endsWith('.json'))
+            .map(f => ({
+            name: f,
+            path: path.join(resultsDir, f),
+            time: fs.statSync(path.join(resultsDir, f)).mtime.getTime()
+        }))
+            .sort((a, b) => b.time - a.time)
+            .slice(0, limit);
+        const results = files.map(f => {
+            const data = fs.readFileSync(f.path, 'utf-8');
+            return JSON.parse(data);
+        });
+        return results;
+    }
+    /**
+     * Check text directly (without file upload)
+     */
+    async checkText(text, contentType = 'edm') {
+        const startTime = Date.now();
+        const checkId = (0, uuid_1.v4)();
+        const languages = this.detectLanguages(text);
+        const isBilingual = languages.length > 1;
+        const primaryLanguage = languages[0] || 'eng';
+        const [aiResult, brandIssues, numericalIssues, ctaIssues, customVariableIssues] = await Promise.all([
+            openai_service_1.openaiService.checkContent(text, primaryLanguage),
+            Promise.resolve(rules_engine_service_1.rulesEngine.checkText(text, contentType)),
+            Promise.resolve(rules_engine_service_1.rulesEngine.checkNumericalFormats(text)),
+            Promise.resolve(rules_engine_service_1.rulesEngine.checkCTA(text)),
+            Promise.resolve(rules_engine_service_1.rulesEngine.validateCustomVariables(text))
+        ]);
+        const allIssues = [
+            ...aiResult.grammarIssues,
+            ...aiResult.brandIssues,
+            ...brandIssues,
+            ...numericalIssues,
+            ...ctaIssues,
+            ...customVariableIssues
+        ];
+        const categorizedIssues = this.categorizeIssues(allIssues);
+        const issuesByLanguage = isBilingual ? this.groupIssuesByLanguage(allIssues) : undefined;
+        const metrics = this.calculateMetrics(categorizedIssues, issuesByLanguage);
+        const result = {
+            id: checkId,
+            fileName: 'text-check',
+            fileType: 'text',
+            status: 'completed',
+            extractedText: text.substring(0, 500),
+            language: primaryLanguage,
+            languages,
+            isBilingual,
+            ocrUsed: false,
+            issues: categorizedIssues,
+            issuesByLanguage,
+            metrics,
+            suggestions: aiResult.suggestions || [],
+            processingTime: Date.now() - startTime,
+            timestamp: new Date().toISOString()
+        };
+        await this.saveResult(result);
+        return result;
+    }
+    /**
+     * ⭐ NEW: Check URL with full content + SEO analysis
+     */
+    async checkUrl(url, urlType = 'others') {
+        const startTime = Date.now();
+        const checkId = (0, uuid_1.v4)();
+        try {
+            console.log(`🌐 Starting URL check: ${url} (type: ${urlType})`);
+            // Step 1: Scrape the URL
+            const scrapedContent = await url_scraper_service_1.urlScraperService.scrapeUrl(url);
+            const { html, text, title } = scrapedContent;
+            // Step 2: Detect languages
+            const languages = this.detectLanguages(html || text);
+            const isBilingual = languages.length > 1;
+            const primaryLanguage = languages[0] || 'eng';
+            // Step 3: Run all content checks in parallel (same as file upload)
+            const [aiResult, brandIssues, numericalIssues, ctaIssues, linkIssues, imageIssues, customVariableIssues, fontIssues, colorIssues, stagingUrlIssues,] = await Promise.all([
+                openai_service_1.openaiService.checkContent(text, primaryLanguage),
+                Promise.resolve(rules_engine_service_1.rulesEngine.checkText(text, 'website')),
+                Promise.resolve(rules_engine_service_1.rulesEngine.checkNumericalFormats(text)),
+                Promise.resolve(rules_engine_service_1.rulesEngine.checkCTA(text)),
+                Promise.resolve(rules_engine_service_1.rulesEngine.validateLinks(html, primaryLanguage)),
+                Promise.resolve(rules_engine_service_1.rulesEngine.validateImages(html)),
+                Promise.resolve(rules_engine_service_1.rulesEngine.validateCustomVariables(text)),
+                Promise.resolve(rules_engine_service_1.rulesEngine.validateFontFamily(html, url)),
+                Promise.resolve(rules_engine_service_1.rulesEngine.validateColors(html)),
+                Promise.resolve(rules_engine_service_1.rulesEngine.validateProductionUrls(html)),
+            ]);
+            // Step 4: SEO Analysis
+            console.log('🔍 Running SEO analysis...');
+            const seoAnalysis = seo_analyzer_service_1.seoAnalyzerService.analyzeSEO(html, url, urlType);
+            // Step 5: AI-powered SEO suggestions
+            const aiSeoSuggestions = await openai_service_1.openaiService.analyzeSEO({ ...seoAnalysis, pageText: text }, urlType);
+            // Combine all issues
+            let allIssues = [
+                ...aiResult.grammarIssues,
+                ...aiResult.brandIssues,
+                ...brandIssues,
+                ...numericalIssues,
+                ...ctaIssues,
+                ...linkIssues,
+                ...imageIssues,
+                ...customVariableIssues,
+                ...fontIssues,
+                ...colorIssues,
+                ...stagingUrlIssues,
+            ];
+            // Add SEO technical issues to the main issues list
+            if (seoAnalysis.technical.issues) {
+                allIssues = [...allIssues, ...seoAnalysis.technical.issues];
+            }
+            if (seoAnalysis.headings.issues) {
+                allIssues = [...allIssues, ...seoAnalysis.headings.issues];
+            }
+            // Tag with language if bilingual
+            if (isBilingual) {
+                const sections = this.splitByLanguageSections(html);
+                allIssues = this.tagIssuesWithLanguage(allIssues, sections, html);
+            }
+            const categorizedIssues = this.categorizeIssues(allIssues);
+            const issuesByLanguage = isBilingual ? this.groupIssuesByLanguage(allIssues) : undefined;
+            const metrics = this.calculateMetrics(categorizedIssues, issuesByLanguage);
+            // Build result with SEO data
+            const result = {
+                id: checkId,
+                fileName: title || url,
+                fileType: 'url',
+                status: 'completed',
+                extractedText: text.substring(0, 500),
+                language: primaryLanguage,
+                languages,
+                isBilingual,
+                ocrUsed: false,
+                issues: categorizedIssues,
+                issuesByLanguage,
+                metrics,
+                suggestions: [
+                    ...aiResult.suggestions,
+                    ...aiSeoSuggestions.contentSuggestions,
+                ],
+                processingTime: Date.now() - startTime,
+                timestamp: new Date().toISOString(),
+                // ⭐ NEW: SEO-specific data
+                url,
+                urlType,
+                seoAnalysis: {
+                    ...seoAnalysis,
+                    aiSuggestions: aiSeoSuggestions,
+                },
+            };
+            await this.saveResult(result);
+            console.log(`✅ URL check completed: ${result.metrics.complianceScore}% score, ${result.metrics.totalIssues} issues, SEO score: ${seoAnalysis.overallScore}%`);
+            return result;
+        }
+        catch (error) {
+            console.error(`❌ URL check failed:`, error.message);
+            throw new Error(`URL check failed: ${error.message}`);
+        }
+    }
+}
+exports.checkerService = new CheckerService();
+//# sourceMappingURL=checker.service.js.map

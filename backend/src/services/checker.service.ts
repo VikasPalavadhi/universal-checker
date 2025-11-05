@@ -1,6 +1,8 @@
 import { ocrService } from './ocr.service';
 import { openaiService } from './openai.service';
 import { rulesEngine } from './rules-engine.service';
+import { urlScraperService } from './url-scraper.service';
+import { seoAnalyzerService } from './seo-analyzer.service';
 import * as fs from 'fs';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
@@ -16,7 +18,7 @@ interface CheckResult {
   isBilingual: boolean;  // ⭐ NEW: Flag for bilingual content
   ocrUsed: boolean;
   ocrConfidence?: number | undefined;
-  
+
   // Issues categorized by type
   issues: {
     grammar: any[];
@@ -29,14 +31,14 @@ interface CheckResult {
     legal: any[];
     accessibility: any[];
   };
-  
+
   // ⭐ NEW: Issues by language
   issuesByLanguage?: {
     english: any[];
     arabic: any[];
     both: any[];
   } | undefined;
-  
+
   // Summary metrics
   metrics: {
     totalIssues: number;
@@ -48,10 +50,15 @@ interface CheckResult {
     englishIssues?: number | undefined;  // ⭐ NEW
     arabicIssues?: number | undefined;   // ⭐ NEW
   };
-  
+
   suggestions: string[];
   processingTime: number;
   timestamp: string;
+
+  // ⭐ NEW: SEO Analysis (for URL checks)
+  seoAnalysis?: any;
+  url?: string;  // Original URL
+  urlType?: string;  // product, offer, campaign, others
 }
 
 class CheckerService {
@@ -509,9 +516,9 @@ class CheckerService {
     const primaryLanguage = languages[0] || 'eng';
 
     const [
-      aiResult, 
-      brandIssues, 
-      numericalIssues, 
+      aiResult,
+      brandIssues,
+      numericalIssues,
       ctaIssues,
       customVariableIssues
     ] = await Promise.all([
@@ -555,6 +562,133 @@ class CheckerService {
 
     await this.saveResult(result);
     return result;
+  }
+
+  /**
+   * ⭐ NEW: Check URL with full content + SEO analysis
+   */
+  async checkUrl(url: string, urlType: string = 'others'): Promise<CheckResult> {
+    const startTime = Date.now();
+    const checkId = uuidv4();
+
+    try {
+      console.log(`🌐 Starting URL check: ${url} (type: ${urlType})`);
+
+      // Step 1: Scrape the URL
+      const scrapedContent = await urlScraperService.scrapeUrl(url);
+      const { html, text, title } = scrapedContent;
+
+      // Step 2: Detect languages
+      const languages = this.detectLanguages(html || text);
+      const isBilingual = languages.length > 1;
+      const primaryLanguage = languages[0] || 'eng';
+
+      // Step 3: Run all content checks in parallel (same as file upload)
+      const [
+        aiResult,
+        brandIssues,
+        numericalIssues,
+        ctaIssues,
+        linkIssues,
+        imageIssues,
+        customVariableIssues,
+        fontIssues,
+        colorIssues,
+        stagingUrlIssues,
+      ] = await Promise.all([
+        openaiService.checkContent(text, primaryLanguage),
+        Promise.resolve(rulesEngine.checkText(text, 'website')),
+        Promise.resolve(rulesEngine.checkNumericalFormats(text)),
+        Promise.resolve(rulesEngine.checkCTA(text)),
+        Promise.resolve(rulesEngine.validateLinks(html, primaryLanguage)),
+        Promise.resolve(rulesEngine.validateImages(html)),
+        Promise.resolve(rulesEngine.validateCustomVariables(text)),
+        Promise.resolve(rulesEngine.validateFontFamily(html, url)),
+        Promise.resolve(rulesEngine.validateColors(html)),
+        Promise.resolve(rulesEngine.validateProductionUrls(html)),
+      ]);
+
+      // Step 4: SEO Analysis
+      console.log('🔍 Running SEO analysis...');
+      const seoAnalysis = seoAnalyzerService.analyzeSEO(html, url, urlType);
+
+      // Step 5: AI-powered SEO suggestions
+      const aiSeoSuggestions = await openaiService.analyzeSEO(
+        { ...seoAnalysis, pageText: text },
+        urlType
+      );
+
+      // Combine all issues
+      let allIssues = [
+        ...aiResult.grammarIssues,
+        ...aiResult.brandIssues,
+        ...brandIssues,
+        ...numericalIssues,
+        ...ctaIssues,
+        ...linkIssues,
+        ...imageIssues,
+        ...customVariableIssues,
+        ...fontIssues,
+        ...colorIssues,
+        ...stagingUrlIssues,
+      ];
+
+      // Add SEO technical issues to the main issues list
+      if (seoAnalysis.technical.issues) {
+        allIssues = [...allIssues, ...seoAnalysis.technical.issues];
+      }
+      if (seoAnalysis.headings.issues) {
+        allIssues = [...allIssues, ...seoAnalysis.headings.issues];
+      }
+
+      // Tag with language if bilingual
+      if (isBilingual) {
+        const sections = this.splitByLanguageSections(html);
+        allIssues = this.tagIssuesWithLanguage(allIssues, sections, html);
+      }
+
+      const categorizedIssues = this.categorizeIssues(allIssues);
+      const issuesByLanguage = isBilingual ? this.groupIssuesByLanguage(allIssues) : undefined;
+      const metrics = this.calculateMetrics(categorizedIssues, issuesByLanguage);
+
+      // Build result with SEO data
+      const result: CheckResult = {
+        id: checkId,
+        fileName: title || url,
+        fileType: 'url',
+        status: 'completed',
+        extractedText: text.substring(0, 500),
+        language: primaryLanguage,
+        languages,
+        isBilingual,
+        ocrUsed: false,
+        issues: categorizedIssues,
+        issuesByLanguage,
+        metrics,
+        suggestions: [
+          ...aiResult.suggestions,
+          ...aiSeoSuggestions.contentSuggestions,
+        ],
+        processingTime: Date.now() - startTime,
+        timestamp: new Date().toISOString(),
+
+        // ⭐ NEW: SEO-specific data
+        url,
+        urlType,
+        seoAnalysis: {
+          ...seoAnalysis,
+          aiSuggestions: aiSeoSuggestions,
+        },
+      };
+
+      await this.saveResult(result);
+      console.log(`✅ URL check completed: ${result.metrics.complianceScore}% score, ${result.metrics.totalIssues} issues, SEO score: ${seoAnalysis.overallScore}%`);
+
+      return result;
+    } catch (error: any) {
+      console.error(`❌ URL check failed:`, error.message);
+      throw new Error(`URL check failed: ${error.message}`);
+    }
   }
 }
 

@@ -98,6 +98,51 @@ router.post('/check-text', async (req: Request, res: Response) => {
 });
 
 /**
+ * POST /api/check-url
+ * Check URL with content analysis + SEO audit
+ */
+router.post('/check-url', async (req: Request, res: Response) => {
+  try {
+    const { url, url_type } = req.body;
+
+    if (!url || url.trim().length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'No URL provided',
+        message: 'Please provide a URL to check'
+      });
+    }
+
+    // Validate URL format
+    try {
+      new URL(url);
+    } catch {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid URL format',
+        message: 'Please provide a valid URL (e.g., https://example.com)'
+      });
+    }
+
+    console.log(`🌐 Checking URL: ${url} (type: ${url_type || 'others'})`);
+
+    const result = await checkerService.checkUrl(url, url_type || 'others');
+
+    res.json({
+      success: true,
+      data: result
+    });
+  } catch (error: any) {
+    console.error('❌ URL check error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      message: 'Failed to check URL'
+    });
+  }
+});
+
+/**
  * GET /api/results/:id
  * Get check result by ID
  */
