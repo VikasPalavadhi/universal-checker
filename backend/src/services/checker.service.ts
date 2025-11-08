@@ -7,8 +7,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
-// Use require() for CommonJS modules
-const pdfParse = require('pdf-parse');
+// Use require() for CommonJS modules - handle both default and direct exports
+const pdfParseModule = require('pdf-parse');
+const pdfParse = pdfParseModule.default || pdfParseModule;
 const mammoth = require('mammoth');
 
 interface CheckResult {
