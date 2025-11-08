@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Upload, CheckCircle, AlertCircle, Loader2, Filter, X, Languages, Link as LinkIcon, TrendingUp, Search } from 'lucide-react';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3003/api';
+const API_URL = '/api'; // Use relative URL for production (Nginx will proxy to backend)
 
 // 🎨 BRAND COLORS
 const BRAND = {
