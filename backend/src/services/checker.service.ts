@@ -6,8 +6,8 @@ import { seoAnalyzerService } from './seo-analyzer.service';
 import * as fs from 'fs';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import * as pdfParse from 'pdf-parse';
-import * as mammoth from 'mammoth';
+import pdfParse from 'pdf-parse';
+import mammoth from 'mammoth';
 
 interface CheckResult {
   id: string;
