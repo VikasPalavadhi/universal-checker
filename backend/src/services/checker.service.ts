@@ -95,10 +95,9 @@ class CheckerService {
       }
       else if (fileExt === 'pdf') {
         const dataBuffer = fs.readFileSync(filePath);
-        // PDFParse is a class - instantiate it with new
-        const { PDFParse } = require('pdf-parse');
-        const parser = new PDFParse();
-        const pdfData = await parser.parse(dataBuffer);
+        // Use standard pdf-parse v1.1.1 - simple function call
+        const pdfParse = require('pdf-parse');
+        const pdfData = await pdfParse(dataBuffer);
         text = pdfData.text;
         ocrUsed = false;
       }
