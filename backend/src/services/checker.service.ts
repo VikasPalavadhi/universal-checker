@@ -95,19 +95,35 @@ class CheckerService {
       }
       else if (fileExt === 'pdf') {
         const dataBuffer = fs.readFileSync(filePath);
-        // Use standard pdf-parse v1.1.1 with lenient options
         const pdfParse = require('pdf-parse');
+
+        // Try parsing with lenient/recovery options
+        const options = {
+          max: 0, // Parse all pages
+          pagerender: (pageData: any) => {
+            // Custom render function - extract text even from problematic pages
+            return pageData.getTextContent()
+              .then((textContent: any) => {
+                return textContent.items.map((item: any) => item.str).join(' ');
+              })
+              .catch(() => ''); // Return empty string if page fails
+          }
+        };
+
         try {
-          const pdfData = await pdfParse(dataBuffer, {
-            max: 0, // Parse all pages
-            version: 'v1.10.100' // Use lenient parser
-          });
-          text = pdfData.text;
+          const pdfData = await pdfParse(dataBuffer, options);
+          text = pdfData.text || '';
+
+          // If no text extracted, throw helpful error
+          if (!text || text.trim().length === 0) {
+            throw new Error('No text could be extracted from this PDF. It may be image-based, encrypted, or corrupted.');
+          }
+
           ocrUsed = false;
         } catch (pdfError: any) {
-          // If PDF parsing fails, provide helpful error
           console.error('PDF parsing error:', pdfError.message);
-          throw new Error(`Unable to parse PDF: ${pdfError.message}. The PDF may be corrupted or password-protected. Please try re-saving the PDF or use a different file.`);
+          // Provide user-friendly error message
+          throw new Error(`PDF processing failed: ${pdfError.message}. Try: 1) Re-save the PDF, 2) Remove password protection, or 3) Use a different PDF file.`);
         }
       }
       else if (fileExt === 'docx') {
