@@ -97,7 +97,9 @@ class CheckerService {
       }
       else if (fileExt === 'pdf') {
         const dataBuffer = fs.readFileSync(filePath);
-        const pdfData = await pdfParse(dataBuffer);
+        // Handle pdf-parse module - it exports the function directly
+        const parsePdf = typeof pdfParse === 'function' ? pdfParse : (pdfParse.default || Object.values(pdfParse).find((v: any) => typeof v === 'function'));
+        const pdfData = await parsePdf(dataBuffer);
         text = pdfData.text;
         ocrUsed = false;
       }
