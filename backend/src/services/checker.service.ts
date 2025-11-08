@@ -95,11 +95,20 @@ class CheckerService {
       }
       else if (fileExt === 'pdf') {
         const dataBuffer = fs.readFileSync(filePath);
-        // Use standard pdf-parse v1.1.1 - simple function call
+        // Use standard pdf-parse v1.1.1 with lenient options
         const pdfParse = require('pdf-parse');
-        const pdfData = await pdfParse(dataBuffer);
-        text = pdfData.text;
-        ocrUsed = false;
+        try {
+          const pdfData = await pdfParse(dataBuffer, {
+            max: 0, // Parse all pages
+            version: 'v1.10.100' // Use lenient parser
+          });
+          text = pdfData.text;
+          ocrUsed = false;
+        } catch (pdfError: any) {
+          // If PDF parsing fails, provide helpful error
+          console.error('PDF parsing error:', pdfError.message);
+          throw new Error(`Unable to parse PDF: ${pdfError.message}. The PDF may be corrupted or password-protected. Please try re-saving the PDF or use a different file.`);
+        }
       }
       else if (fileExt === 'docx') {
         const dataBuffer = fs.readFileSync(filePath);
