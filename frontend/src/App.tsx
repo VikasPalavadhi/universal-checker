@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Upload, CheckCircle, AlertCircle, Loader2, Filter, X, Globe, Languages, Link as LinkIcon, TrendingUp, Search, BarChart3 } from 'lucide-react';
+import { Upload, CheckCircle, AlertCircle, Loader2, Filter, X, Languages, Link as LinkIcon, TrendingUp, Search } from 'lucide-react';
 import axios from 'axios';
 
 const API_URL = 'http://localhost:3003/api';
@@ -13,15 +13,12 @@ const BRAND = {
   darkGray: '#6b7280',
 };
 
-// Loading steps for the interactive popup
+// Loading steps for the interactive popup (simplified to 4 steps)
 const LOADING_STEPS = [
- // { id: 1, label: 'Uploading file...', icon: '📤', duration: 1000 },
   { id: 1, label: 'Extracting text content...', icon: '📄', duration: 1500 },
   { id: 2, label: 'Analyzing content quality...', icon: '🔍', duration: 2000 },
-  { id: 3, label: 'Checking brand compliance...', icon: '🏷️', duration: 1500 },
-  { id: 4, label: 'Validating all links...', icon: '🔗', duration: 2000 },
-  { id: 5, label: 'Scanning for issues...', icon: '🔎', duration: 2000 },
-  { id: 6, label: 'Generating final report...', icon: '📊', duration: 1000 },
+  { id: 3, label: 'Checking brand compliance...', icon: '🏷️', duration: 2000 },
+  { id: 4, label: 'Generating final report...', icon: '📊', duration: 1500 },
 ];
 
 function App() {
