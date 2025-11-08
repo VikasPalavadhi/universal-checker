@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Upload, CheckCircle, AlertCircle, Loader2, Filter, X, Globe, Languages } from 'lucide-react';
+import { Upload, CheckCircle, AlertCircle, Loader2, Filter, X, Languages } from 'lucide-react';
 import axios from 'axios';
 
 // Use environment variable or fallback to relative URL for production
