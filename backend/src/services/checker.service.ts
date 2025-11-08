@@ -6,8 +6,10 @@ import { seoAnalyzerService } from './seo-analyzer.service';
 import * as fs from 'fs';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import pdfParse from 'pdf-parse';
-import mammoth from 'mammoth';
+
+// Use require() for CommonJS modules
+const pdfParse = require('pdf-parse');
+const mammoth = require('mammoth');
 
 interface CheckResult {
   id: string;
