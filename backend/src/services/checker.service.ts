@@ -6,6 +6,8 @@ import { seoAnalyzerService } from './seo-analyzer.service';
 import * as fs from 'fs';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
+import * as pdfParse from 'pdf-parse';
+import * as mammoth from 'mammoth';
 
 interface CheckResult {
   id: string;
@@ -83,12 +85,24 @@ class CheckerService {
         text = this.extractTextFromHTML(htmlContent);
         html = htmlContent;
         ocrUsed = false;
-      } 
+      }
       else if (['jpg', 'jpeg', 'png'].includes(fileExt || '')) {
         const ocrResult = await ocrService.extractText(filePath);
         text = ocrResult.text;
         ocrUsed = true;
         ocrConfidence = ocrResult.confidence || 0;
+      }
+      else if (fileExt === 'pdf') {
+        const dataBuffer = fs.readFileSync(filePath);
+        const pdfData = await pdfParse(dataBuffer);
+        text = pdfData.text;
+        ocrUsed = false;
+      }
+      else if (fileExt === 'docx') {
+        const dataBuffer = fs.readFileSync(filePath);
+        const result = await mammoth.extractRawText({ buffer: dataBuffer });
+        text = result.value;
+        ocrUsed = false;
       }
       else {
         throw new Error('Unsupported file type');
