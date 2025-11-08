@@ -50,22 +50,26 @@ function App() {
     if (loading) {
       setCurrentStep(0);
       setCompletedSteps([]);
-      
+
       let stepIndex = 0;
       const animateSteps = () => {
         if (stepIndex < LOADING_STEPS.length) {
           setCurrentStep(stepIndex);
-          
+
           const timer = setTimeout(() => {
             setCompletedSteps(prev => [...prev, stepIndex]);
-            stepIndex++;
-            animateSteps();
+
+            // Small delay before moving to next step so checkmark is visible
+            setTimeout(() => {
+              stepIndex++;
+              animateSteps();
+            }, 300);
           }, LOADING_STEPS[stepIndex].duration);
-          
+
           return () => clearTimeout(timer);
         }
       };
-      
+
       animateSteps();
     }
   }, [loading]);
