@@ -2,7 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import { Upload, CheckCircle, AlertCircle, Loader2, Filter, X, Globe, Languages } from 'lucide-react';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3003/api';
+// Use environment variable or fallback to relative URL for production
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 // 🎨 BRAND COLORS
 const BRAND = {

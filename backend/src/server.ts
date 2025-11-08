@@ -8,7 +8,31 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3003;
 
-app.use(cors());
+// Configure CORS to allow requests from the production domain and local development
+const allowedOrigins = [
+  'https://checker.xopenai.in',
+  'http://checker.xopenai.in',
+  'http://localhost:5173', // Vite dev server
+  'http://localhost:3000', // Alternative local dev
+  'http://localhost:4173', // Vite preview
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps, curl, Postman)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.warn(`⚠️  Blocked CORS request from origin: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  optionsSuccessStatus: 200
+}));
+
 app.use(express.json());
 
 // Routes
