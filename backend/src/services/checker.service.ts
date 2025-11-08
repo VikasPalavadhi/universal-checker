@@ -95,13 +95,9 @@ class CheckerService {
       }
       else if (fileExt === 'pdf') {
         const dataBuffer = fs.readFileSync(filePath);
-        // Load pdf-parse dynamically and handle different export patterns
-        const pdfModule = require('pdf-parse');
-        const pdfParser = pdfModule.default || pdfModule || pdfModule.parseBuffer;
-        if (typeof pdfParser !== 'function') {
-          throw new Error('pdf-parse module not properly loaded');
-        }
-        const pdfData = await pdfParser(dataBuffer);
+        // Use PDFParse from pdf-parse module
+        const { PDFParse } = require('pdf-parse');
+        const pdfData = await PDFParse(dataBuffer);
         text = pdfData.text;
         ocrUsed = false;
       }
