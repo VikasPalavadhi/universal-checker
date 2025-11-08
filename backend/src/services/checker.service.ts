@@ -7,9 +7,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
-// Use require() for CommonJS modules - handle both default and direct exports
-const pdfParseModule = require('pdf-parse');
-const pdfParse = pdfParseModule.default || pdfParseModule;
+// Use require() for CommonJS modules
 const mammoth = require('mammoth');
 
 interface CheckResult {
@@ -97,8 +95,13 @@ class CheckerService {
       }
       else if (fileExt === 'pdf') {
         const dataBuffer = fs.readFileSync(filePath);
-        // Call pdf-parse - require returns the function directly
-        const pdfData = await (require('pdf-parse'))(dataBuffer);
+        // Load pdf-parse dynamically and handle different export patterns
+        const pdfModule = require('pdf-parse');
+        const pdfParser = pdfModule.default || pdfModule || pdfModule.parseBuffer;
+        if (typeof pdfParser !== 'function') {
+          throw new Error('pdf-parse module not properly loaded');
+        }
+        const pdfData = await pdfParser(dataBuffer);
         text = pdfData.text;
         ocrUsed = false;
       }
