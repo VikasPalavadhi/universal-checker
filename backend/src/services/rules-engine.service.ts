@@ -90,6 +90,34 @@ class RulesEngineEnhanced {
     }
   }
 
+  /**
+   * Decode HTML entities to actual characters
+   * Handles both named entities (&nbsp;) and numeric entities (&#1234; &#x1234;)
+   */
+  private decodeHTMLEntities(text: string): string {
+    // Decode named entities
+    let decoded = text
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&apos;/g, "'");
+
+    // Decode numeric entities (&#1234;)
+    decoded = decoded.replace(/&#(\d+);/g, (match, dec) => {
+      return String.fromCharCode(parseInt(dec, 10));
+    });
+
+    // Decode hex entities (&#x1234;)
+    decoded = decoded.replace(/&#x([0-9a-fA-F]+);/g, (match, hex) => {
+      return String.fromCharCode(parseInt(hex, 16));
+    });
+
+    return decoded;
+  }
+
   // ============================================
   // ORIGINAL METHODS (ALL PRESERVED)
   // ============================================
@@ -265,7 +293,8 @@ class RulesEngineEnhanced {
 
     while ((match = linkPattern.exec(html)) !== null) {
       const link = match[1];
-      const linkText = match[2].replace(/<[^>]+>/g, '').trim();
+      // ⭐ CRITICAL FIX: Decode HTML entities in link text to properly detect Arabic characters
+      const linkText = this.decodeHTMLEntities(match[2].replace(/<[^>]+>/g, '').trim());
 
       // Skip if empty (already caught above)
       if (!link || link.trim() === '') continue;
@@ -366,32 +395,18 @@ class RulesEngineEnhanced {
       // ⭐ FIXED: Check local context for each link instead of document-level language
       const linkContextStart = Math.max(0, match.index - 1000);
       const linkContextEnd = Math.min(html.length, match.index + 1000);
-      const linkContext = html.slice(linkContextStart, linkContextEnd);
+      const rawLinkContext = html.slice(linkContextStart, linkContextEnd);
+      // ⭐ CRITICAL FIX: Decode HTML entities in context to properly detect Arabic characters
+      const linkContext = this.decodeHTMLEntities(rawLinkContext);
 
       // Detect if this specific link is in an Arabic or English context
-      const hasRTL = /direction:\s*rtl/i.test(linkContext) || /dir=["']rtl["']/i.test(linkContext);
+      const hasRTL = /direction:\s*rtl/i.test(rawLinkContext) || /dir=["']rtl["']/i.test(rawLinkContext);
       const hasArabicLinkText = /[\u0600-\u06FF]/.test(linkText);
       const arabicCharsInContext = (linkContext.match(/[\u0600-\u06FF]/g) || []).length;
       const englishCharsInContext = (linkContext.match(/[a-zA-Z]/g) || []).length;
       const ratio = arabicCharsInContext / (englishCharsInContext + arabicCharsInContext);
       const isLinkInArabicContext = hasRTL || hasArabicLinkText || (arabicCharsInContext > 0 && ratio > 0.2);
       const isLinkInEnglishContext = !isLinkInArabicContext;
-
-      // DEBUG: Log link language detection for troubleshooting
-      if (link.includes('/ar/') || link.includes('/en/')) {
-        console.log('🔍 LINK LANGUAGE DETECTION:');
-        console.log('  Link:', link);
-        console.log('  Link Text:', linkText);
-        console.log('  Link Text (char codes):', linkText.split('').map(c => c.charCodeAt(0)));
-        console.log('  hasRTL:', hasRTL);
-        console.log('  hasArabicLinkText:', hasArabicLinkText);
-        console.log('  arabicCharsInContext:', arabicCharsInContext);
-        console.log('  englishCharsInContext:', englishCharsInContext);
-        console.log('  ratio:', ratio);
-        console.log('  isLinkInArabicContext:', isLinkInArabicContext);
-        console.log('  isLinkInEnglishContext:', isLinkInEnglishContext);
-        console.log('  ---');
-      }
 
       // Skip social media links from language mismatch checks
       const isSocialMedia = this.isSocialMediaLink(link);
