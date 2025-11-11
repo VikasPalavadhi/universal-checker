@@ -364,15 +364,16 @@ class RulesEngineEnhanced {
 
       // Language-specific validation
       // ⭐ FIXED: Check local context for each link instead of document-level language
-      const linkContextStart = Math.max(0, match.index - 500);
-      const linkContextEnd = Math.min(html.length, match.index + 500);
+      const linkContextStart = Math.max(0, match.index - 1000);
+      const linkContextEnd = Math.min(html.length, match.index + 1000);
       const linkContext = html.slice(linkContextStart, linkContextEnd);
 
       // Detect if this specific link is in an Arabic or English context
       const hasRTL = /direction:\s*rtl/i.test(linkContext) || /dir=["']rtl["']/i.test(linkContext);
+      const hasArabicLinkText = /[\u0600-\u06FF]/.test(linkText);
       const arabicCharsInContext = (linkContext.match(/[\u0600-\u06FF]/g) || []).length;
       const englishCharsInContext = (linkContext.match(/[a-zA-Z]/g) || []).length;
-      const isLinkInArabicContext = hasRTL || (arabicCharsInContext > 0 && arabicCharsInContext / (englishCharsInContext + arabicCharsInContext) > 0.3);
+      const isLinkInArabicContext = hasRTL || hasArabicLinkText || (arabicCharsInContext > 0 && arabicCharsInContext / (englishCharsInContext + arabicCharsInContext) > 0.2);
       const isLinkInEnglishContext = !isLinkInArabicContext;
 
       // Skip social media links from language mismatch checks
