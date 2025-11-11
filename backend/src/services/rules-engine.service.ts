@@ -363,14 +363,22 @@ class RulesEngineEnhanced {
       }
 
       // Language-specific validation
-      // ✅ Accept both 'en'/'eng' and 'ar'/'ara' language codes
-      const isEnglish = language === 'en' || language === 'eng';
-      const isArabic = language === 'ar' || language === 'ara';
-      
+      // ⭐ FIXED: Check local context for each link instead of document-level language
+      const linkContextStart = Math.max(0, match.index - 500);
+      const linkContextEnd = Math.min(html.length, match.index + 500);
+      const linkContext = html.slice(linkContextStart, linkContextEnd);
+
+      // Detect if this specific link is in an Arabic or English context
+      const hasRTL = /direction:\s*rtl/i.test(linkContext) || /dir=["']rtl["']/i.test(linkContext);
+      const arabicCharsInContext = (linkContext.match(/[\u0600-\u06FF]/g) || []).length;
+      const englishCharsInContext = (linkContext.match(/[a-zA-Z]/g) || []).length;
+      const isLinkInArabicContext = hasRTL || (arabicCharsInContext > 0 && arabicCharsInContext / (englishCharsInContext + arabicCharsInContext) > 0.3);
+      const isLinkInEnglishContext = !isLinkInArabicContext;
+
       // Skip social media links from language mismatch checks
       const isSocialMedia = this.isSocialMediaLink(link);
-      
-      if (!isSocialMedia && isEnglish && (link.includes('/ar/') || link.toLowerCase().includes('/arabic/'))) {
+
+      if (!isSocialMedia && isLinkInEnglishContext && (link.includes('/ar/') || link.toLowerCase().includes('/arabic/'))) {
         issues.push({
           rule_id: 'language_mismatch_001',
           type: 'language_validation',
@@ -382,7 +390,7 @@ class RulesEngineEnhanced {
           original: link,
           suggestion: 'Ensure all links point to English pages'
         });
-      } else if (!isSocialMedia && isArabic && (link.includes('/en/') || link.toLowerCase().includes('/english/')) && link.startsWith('http')) {
+      } else if (!isSocialMedia && isLinkInArabicContext && (link.includes('/en/') || link.toLowerCase().includes('/english/')) && link.startsWith('http')) {
         issues.push({
           rule_id: 'language_mismatch_002',
           type: 'language_validation',
@@ -394,7 +402,7 @@ class RulesEngineEnhanced {
           original: link,
           suggestion: 'Ensure all links point to Arabic pages'
         });
-      } else if (!isSocialMedia && isArabic && !link.includes('/ar/') && !link.toLowerCase().includes('/arabic/') && link.startsWith('http')) {
+      } else if (!isSocialMedia && isLinkInArabicContext && !link.includes('/ar/') && !link.toLowerCase().includes('/arabic/') && link.startsWith('http')) {
         issues.push({
           rule_id: 'language_mismatch_003',
           type: 'language_validation',
