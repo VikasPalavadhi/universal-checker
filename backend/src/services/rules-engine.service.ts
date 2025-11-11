@@ -408,6 +408,23 @@ class RulesEngineEnhanced {
       const isLinkInArabicContext = hasRTL || hasArabicLinkText || (arabicCharsInContext > 0 && ratio > 0.2);
       const isLinkInEnglishContext = !isLinkInArabicContext;
 
+      // DEBUG: Log detection for /ar/ and /en/ links
+      if (link.includes('/ar/') || link.includes('/en/')) {
+        console.log('\n🔍 LINK DETECTION DEBUG:');
+        console.log('  URL:', link);
+        console.log('  Link Text:', JSON.stringify(linkText));
+        console.log('  Link Text chars:', linkText.split('').map((c, i) => `${c}(${c.charCodeAt(0)})`).join(' '));
+        console.log('  hasRTL:', hasRTL);
+        console.log('  hasArabicLinkText:', hasArabicLinkText);
+        console.log('  arabicCharsInContext:', arabicCharsInContext);
+        console.log('  englishCharsInContext:', englishCharsInContext);
+        console.log('  ratio:', ratio.toFixed(3));
+        console.log('  isLinkInArabicContext:', isLinkInArabicContext);
+        console.log('  isLinkInEnglishContext:', isLinkInEnglishContext);
+        console.log('  Will trigger error?', isLinkInEnglishContext && link.includes('/ar/'));
+        console.log('---\n');
+      }
+
       // Skip social media links from language mismatch checks
       const isSocialMedia = this.isSocialMediaLink(link);
 
