@@ -392,20 +392,25 @@ class RulesEngineEnhanced {
       }
 
       // Language-specific validation
-      // ⭐ FIXED: Check local context for each link instead of document-level language
-      const linkContextStart = Math.max(0, match.index - 1000);
-      const linkContextEnd = Math.min(html.length, match.index + 1000);
+      // ⭐ CRITICAL FIX: Use small focused context window (300 chars) to avoid bilingual email skew
+      // In bilingual emails, a large context window (1000 chars) captures English sections from earlier
+      const linkContextStart = Math.max(0, match.index - 300);
+      const linkContextEnd = Math.min(html.length, match.index + 300);
       const rawLinkContext = html.slice(linkContextStart, linkContextEnd);
-      // ⭐ CRITICAL FIX: Decode HTML entities in context to properly detect Arabic characters
+      // ⭐ Decode HTML entities in context to properly detect Arabic characters
       const linkContext = this.decodeHTMLEntities(rawLinkContext);
 
       // Detect if this specific link is in an Arabic or English context
+      // Priority: RTL direction (strongest signal) > Arabic link text > character ratio
       const hasRTL = /direction:\s*rtl/i.test(rawLinkContext) || /dir=["']rtl["']/i.test(rawLinkContext);
       const hasArabicLinkText = /[\u0600-\u06FF]/.test(linkText);
       const arabicCharsInContext = (linkContext.match(/[\u0600-\u06FF]/g) || []).length;
       const englishCharsInContext = (linkContext.match(/[a-zA-Z]/g) || []).length;
-      const ratio = arabicCharsInContext / (englishCharsInContext + arabicCharsInContext);
-      const isLinkInArabicContext = hasRTL || hasArabicLinkText || (arabicCharsInContext > 0 && ratio > 0.2);
+      const totalChars = arabicCharsInContext + englishCharsInContext;
+      const ratio = totalChars > 0 ? arabicCharsInContext / totalChars : 0;
+
+      // ⭐ CRITICAL: Any ONE of these conditions means Arabic context
+      const isLinkInArabicContext = hasRTL || hasArabicLinkText || ratio > 0.3;
       const isLinkInEnglishContext = !isLinkInArabicContext;
 
       // DEBUG: Log detection for /ar/ and /en/ links
