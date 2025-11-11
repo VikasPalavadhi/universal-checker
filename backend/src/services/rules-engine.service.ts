@@ -373,8 +373,25 @@ class RulesEngineEnhanced {
       const hasArabicLinkText = /[\u0600-\u06FF]/.test(linkText);
       const arabicCharsInContext = (linkContext.match(/[\u0600-\u06FF]/g) || []).length;
       const englishCharsInContext = (linkContext.match(/[a-zA-Z]/g) || []).length;
-      const isLinkInArabicContext = hasRTL || hasArabicLinkText || (arabicCharsInContext > 0 && arabicCharsInContext / (englishCharsInContext + arabicCharsInContext) > 0.2);
+      const ratio = arabicCharsInContext / (englishCharsInContext + arabicCharsInContext);
+      const isLinkInArabicContext = hasRTL || hasArabicLinkText || (arabicCharsInContext > 0 && ratio > 0.2);
       const isLinkInEnglishContext = !isLinkInArabicContext;
+
+      // DEBUG: Log link language detection for troubleshooting
+      if (link.includes('/ar/') || link.includes('/en/')) {
+        console.log('🔍 LINK LANGUAGE DETECTION:');
+        console.log('  Link:', link);
+        console.log('  Link Text:', linkText);
+        console.log('  Link Text (char codes):', linkText.split('').map(c => c.charCodeAt(0)));
+        console.log('  hasRTL:', hasRTL);
+        console.log('  hasArabicLinkText:', hasArabicLinkText);
+        console.log('  arabicCharsInContext:', arabicCharsInContext);
+        console.log('  englishCharsInContext:', englishCharsInContext);
+        console.log('  ratio:', ratio);
+        console.log('  isLinkInArabicContext:', isLinkInArabicContext);
+        console.log('  isLinkInEnglishContext:', isLinkInEnglishContext);
+        console.log('  ---');
+      }
 
       // Skip social media links from language mismatch checks
       const isSocialMedia = this.isSocialMediaLink(link);
