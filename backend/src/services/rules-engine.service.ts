@@ -391,44 +391,49 @@ class RulesEngineEnhanced {
         });
       }
 
-      // Language-specific validation
-      // ⭐ CRITICAL FIX: Use small focused context window (300 chars) to avoid bilingual email skew
-      // In bilingual emails, a large context window (1000 chars) captures English sections from earlier
-      const linkContextStart = Math.max(0, match.index - 300);
-      const linkContextEnd = Math.min(html.length, match.index + 300);
-      const rawLinkContext = html.slice(linkContextStart, linkContextEnd);
-      // ⭐ Decode HTML entities in context to properly detect Arabic characters
-      const linkContext = this.decodeHTMLEntities(rawLinkContext);
+      // ====================================================================
+      // LANGUAGE CONTEXT DETECTION - Multi-layered approach for accuracy
+      // ====================================================================
 
-      // Detect if this specific link is in an Arabic or English context
-      // Priority: RTL direction (strongest signal) > Arabic link text > character ratio
-      const hasRTL = /direction:\s*rtl/i.test(rawLinkContext) || /dir=["']rtl["']/i.test(rawLinkContext);
+      // Layer 1: Check if link text itself contains Arabic
       const hasArabicLinkText = /[\u0600-\u06FF]/.test(linkText);
-      const arabicCharsInContext = (linkContext.match(/[\u0600-\u06FF]/g) || []).length;
-      const englishCharsInContext = (linkContext.match(/[a-zA-Z]/g) || []).length;
-      const totalChars = arabicCharsInContext + englishCharsInContext;
-      const ratio = totalChars > 0 ? arabicCharsInContext / totalChars : 0;
 
-      // ⭐ CRITICAL: Any ONE of these conditions means Arabic context
-      const isLinkInArabicContext = hasRTL || hasArabicLinkText || ratio > 0.3;
+      // Layer 2: Check immediate context (500 chars) for RTL direction attribute
+      const immediateContextStart = Math.max(0, match.index - 500);
+      const immediateContextEnd = Math.min(html.length, match.index + 500);
+      const immediateContext = html.slice(immediateContextStart, immediateContextEnd);
+      const hasRTLInImmediate = /direction:\s*rtl/i.test(immediateContext) || /dir=["']rtl["']/i.test(immediateContext);
+
+      // Layer 3: Check broader context (1500 chars) for Arabic text density
+      const broadContextStart = Math.max(0, match.index - 1500);
+      const broadContextEnd = Math.min(html.length, match.index + 1500);
+      const broadContext = this.decodeHTMLEntities(html.slice(broadContextStart, broadContextEnd));
+      const arabicCharsInBroad = (broadContext.match(/[\u0600-\u06FF]/g) || []).length;
+      const englishCharsInBroad = (broadContext.match(/[a-zA-Z]/g) || []).length;
+      const totalCharsInBroad = arabicCharsInBroad + englishCharsInBroad;
+      const arabicRatioInBroad = totalCharsInBroad > 0 ? arabicCharsInBroad / totalCharsInBroad : 0;
+
+      // Layer 4: Check very focused context (200 chars) around the link for high Arabic density
+      const focusedContextStart = Math.max(0, match.index - 200);
+      const focusedContextEnd = Math.min(html.length, match.index + 200);
+      const focusedContext = this.decodeHTMLEntities(html.slice(focusedContextStart, focusedContextEnd));
+      const arabicCharsInFocused = (focusedContext.match(/[\u0600-\u06FF]/g) || []).length;
+      const englishCharsInFocused = (focusedContext.match(/[a-zA-Z]/g) || []).length;
+      const totalCharsInFocused = arabicCharsInFocused + englishCharsInFocused;
+      const arabicRatioInFocused = totalCharsInFocused > 0 ? arabicCharsInFocused / totalCharsInFocused : 0;
+
+      // DECISION LOGIC: A link is in Arabic context if ANY of these conditions are true:
+      // 1. Link text itself contains Arabic characters (STRONGEST signal)
+      // 2. RTL direction is set in immediate context (VERY STRONG signal)
+      // 3. Focused context (200 chars) has >40% Arabic characters
+      // 4. Broad context (1500 chars) has >25% Arabic characters
+      const isLinkInArabicContext =
+        hasArabicLinkText ||
+        hasRTLInImmediate ||
+        arabicRatioInFocused > 0.4 ||
+        arabicRatioInBroad > 0.25;
+
       const isLinkInEnglishContext = !isLinkInArabicContext;
-
-      // DEBUG: Log detection for /ar/ and /en/ links
-      if (link.includes('/ar/') || link.includes('/en/')) {
-        console.log('\n🔍 LINK DETECTION DEBUG:');
-        console.log('  URL:', link);
-        console.log('  Link Text:', JSON.stringify(linkText));
-        console.log('  Link Text chars:', linkText.split('').map((c, i) => `${c}(${c.charCodeAt(0)})`).join(' '));
-        console.log('  hasRTL:', hasRTL);
-        console.log('  hasArabicLinkText:', hasArabicLinkText);
-        console.log('  arabicCharsInContext:', arabicCharsInContext);
-        console.log('  englishCharsInContext:', englishCharsInContext);
-        console.log('  ratio:', ratio.toFixed(3));
-        console.log('  isLinkInArabicContext:', isLinkInArabicContext);
-        console.log('  isLinkInEnglishContext:', isLinkInEnglishContext);
-        console.log('  Will trigger error?', isLinkInEnglishContext && link.includes('/ar/'));
-        console.log('---\n');
-      }
 
       // Skip social media links from language mismatch checks
       const isSocialMedia = this.isSocialMediaLink(link);
