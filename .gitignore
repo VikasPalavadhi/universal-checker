@@ -2,3 +2,16 @@ backend/.env
 backend/node_modules
 frontend/node_modules
 frontend/.env
+
+# TypeScript build artifacts
+*.js
+*.d.ts
+*.js.map
+*.d.ts.map
+
+# Keep essential config files
+!*.config.js
+!vite.config.js
+!tailwind.config.js
+!postcss.config.js
+!eslint.config.js
