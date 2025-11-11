@@ -555,20 +555,30 @@ class RulesEngineEnhanced {
       
       // â­ NEW: Check if this font is in an Arabic context
       // Get surrounding context (200 chars before and after)
-      const contextStart = Math.max(0, match.index - 200);
-      const contextEnd = Math.min(html.length, match.index + 200);
+      const contextStart = Math.max(0, match.index - 500);
+      const contextEnd = Math.min(html.length, match.index + 500);
       const context = html.slice(contextStart, contextEnd);
-      
-      // Detect if this is Arabic content (has Arabic characters)
-      const hasArabicChars = /[\u0600-\u06FF]/.test(context);
+
+      // Check for explicit RTL direction (strongest indicator of Arabic section)
+      const hasRTLDirection = /direction:\s*rtl/i.test(context) || /dir=["']rtl["']/i.test(context);
+
+      // Count Arabic vs English characters in the immediate context
+      const arabicChars = (context.match(/[\u0600-\u06FF]/g) || []).length;
+      const englishChars = (context.match(/[a-zA-Z]/g) || []).length;
+
+      // Consider it Arabic context if has explicit RTL direction OR Arabic chars significantly outnumber English (ratio > 0.3)
+      const hasArabicChars = hasRTLDirection || (arabicChars > 0 && arabicChars / (englishChars + arabicChars) > 0.3);
       
       // â­ PRIORITY CHECK: Arabic content MUST use Tajawal
       if (hasArabicChars) {
-        // Skip validation if it's just "sans-serif" alone (fallback font)
-        if (fontFamily.toLowerCase() === 'sans-serif') {
-          continue; // This is acceptable as fallback
+        // Skip validation for generic fallback fonts
+        const isFallbackFont = fontFamily.toLowerCase() === 'sans-serif' ||
+                               fontFamily.toLowerCase() === 'arial' ||
+                               fontFamily.toLowerCase() === 'helvetica';
+        if (isFallbackFont) {
+          continue; // Generic fallback fonts are acceptable
         }
-        
+
         // Arabic content must use Tajawal
         if (!fontFamily.includes('Tajawal')) {
           issues.push({
@@ -604,7 +614,8 @@ class RulesEngineEnhanced {
         }
       } else {
         // Only check for Plus Jakarta Sans if NOT in Arabic context
-        if (!hasArabicChars && !fontFamily.includes('Plus Jakarta Sans')) {
+        // Also allow Tajawal for bilingual content
+        if (!hasArabicChars && !fontFamily.includes('Plus Jakarta Sans') && !fontFamily.includes('Tajawal')) {
           issues.push({
             rule_id: 'font_family_regular_001',
             type: 'brand_compliance',

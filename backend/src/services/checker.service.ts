@@ -203,21 +203,57 @@ class CheckerService {
 
   /**
    * ⭐ NEW: Detect ALL languages in content
+   * ⭐ FIXED: Now detects languages in order of appearance AND considers HTML lang attribute
    */
   private detectLanguages(text: string): string[] {
     const languages: string[] = [];
-    
-    // Check for Arabic Unicode characters
-    if (/[\u0600-\u06FF]/.test(text)) {
-      languages.push('ara');
+
+    // First, check HTML lang attribute if present (highest priority)
+    const langAttrMatch = text.match(/<html[^>]*\slang=["']([^"']+)["']/i);
+    if (langAttrMatch && langAttrMatch[1]) {
+      const langAttr = langAttrMatch[1].toLowerCase();
+      if (langAttr.startsWith('en')) {
+        // English is declared as primary language
+        languages.push('eng');
+        // Check if Arabic also exists
+        if (/[\u0600-\u06FF]/.test(text)) {
+          languages.push('ara');
+        }
+        return languages;
+      } else if (langAttr.startsWith('ar')) {
+        // Arabic is declared as primary language
+        languages.push('ara');
+        // Check if English also exists
+        if (/[a-zA-Z]/.test(text)) {
+          languages.push('eng');
+        }
+        return languages;
+      }
     }
-    
-    // Check for Latin characters (English and other Latin-script languages)
-    if (/[a-zA-Z]/.test(text)) {
+
+    // If no lang attribute, detect by order of appearance
+    const firstArabicPos = text.search(/[\u0600-\u06FF]/);
+    const firstEnglishPos = text.search(/[a-zA-Z]/);
+
+    const hasArabic = firstArabicPos !== -1;
+    const hasEnglish = firstEnglishPos !== -1;
+
+    if (hasEnglish && hasArabic) {
+      // Both exist - order by appearance
+      if (firstEnglishPos < firstArabicPos) {
+        languages.push('eng');
+        languages.push('ara');
+      } else {
+        languages.push('ara');
+        languages.push('eng');
+      }
+    } else if (hasArabic) {
+      languages.push('ara');
+    } else if (hasEnglish) {
       languages.push('eng');
     }
-    
-    // Return in order of appearance (English usually comes first)
+
+    // Default to English if nothing detected
     return languages.length > 0 ? languages : ['eng'];
   }
 
@@ -332,19 +368,36 @@ class CheckerService {
 
   /**
    * Extract text from HTML, removing tags and scripts
+   * ⭐ FIXED: Now excludes preheader to avoid duplicate text in grammar checks
    */
   private extractTextFromHTML(html: string): string {
-    let text = html.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+    let text = html;
+
+    // Remove preheader div (hidden text that appears before HTML rendering)
+    // Pattern: <div class="preheader" style="display:none;...">...</div>
+    text = text.replace(/<div[^>]*class=["']preheader["'][^>]*>[\s\S]*?<\/div>/gi, '');
+
+    // Remove script tags
+    text = text.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+
+    // Remove style tags
     text = text.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
+
+    // Remove all HTML tags
     text = text.replace(/<[^>]+>/g, ' ');
+
+    // Decode HTML entities
     text = text.replace(/&nbsp;/g, ' ');
     text = text.replace(/&amp;/g, '&');
     text = text.replace(/&lt;/g, '<');
     text = text.replace(/&gt;/g, '>');
     text = text.replace(/&quot;/g, '"');
     text = text.replace(/&#39;/g, "'");
+    text = text.replace(/&#8202;/g, ''); // Zero-width space
+
+    // Normalize whitespace
     text = text.replace(/\s+/g, ' ').trim();
-    
+
     return text;
   }
 
