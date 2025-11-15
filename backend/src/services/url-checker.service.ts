@@ -257,7 +257,7 @@ class CheckerService {
       cta: issues.filter(i => i.category === 'cta'),
       tone: issues.filter(i => i.category === 'tone'),
       legal: issues.filter(i => i.category === 'legal_compliance'),
-      accessibility: issues.filter(i => i.category.includes('accessibility'))
+      accessibility: issues.filter(i => i.category?.includes('accessibility'))
     };
   }
 
