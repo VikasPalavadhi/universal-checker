@@ -2,3 +2,15 @@ backend/.env
 backend/node_modules
 frontend/node_modules
 frontend/.env
+
+# Runtime data - don't commit
+backend/storage/results/
+backend/storage/uploads/
+*.log
+
+# Build artifacts
+backend/**/*.js
+backend/**/*.d.ts
+backend/**/*.map
+!backend/**/*.config.js
+backend/dist/
