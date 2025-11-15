@@ -121,14 +121,32 @@ class UrlScraperService {
       // Parse HTML and extract text
       const $ = cheerio.load(html);
 
-      // Remove script and style tags
+      // Remove script, style, and non-content elements
       $('script, style, noscript').remove();
+
+      // ⭐ SKIP header, nav, footer, sidebar, ads, cookie banners
+      $('header, nav, footer, aside, [role="navigation"], [role="banner"], [role="contentinfo"]').remove();
+      $('[class*="nav"], [class*="menu"], [class*="header"], [class*="footer"]').remove();
+      $('[class*="sidebar"], [class*="cookie"], [class*="consent"], [class*="banner"]').remove();
+      $('[id*="nav"], [id*="menu"], [id*="header"], [id*="footer"]').remove();
 
       // Get title
       const title = $('title').text().trim() || 'No title';
 
-      // Extract text content
-      const text = $('body').text()
+      // Extract text from main content area (prioritize main, article, or body)
+      let text = '';
+      const mainContent = $('main, article, [role="main"], .content, #content');
+
+      if (mainContent.length > 0) {
+        // Found main content area - extract only from there
+        text = mainContent.text();
+      } else {
+        // Fallback to body if no main content found
+        text = $('body').text();
+      }
+
+      // Clean up whitespace
+      text = text
         .replace(/\s+/g, ' ')
         .replace(/\n+/g, ' ')
         .trim();

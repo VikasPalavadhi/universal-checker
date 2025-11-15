@@ -37,11 +37,14 @@ function App() {
   // Loading animation states
   const [currentStep, setCurrentStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
-  
+
   // Filters
   const [selectedSeverity, setSelectedSeverity] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedLanguage, setSelectedLanguage] = useState<string>('all');
+
+  // Show full extracted text
+  const [showFullText, setShowFullText] = useState(false);
   
   // Ref for scrolling to issues
   const issuesRef = useRef<HTMLDivElement>(null);
@@ -699,17 +702,39 @@ function App() {
             {/* Extracted Text Preview */}
             {result.extractedText && (
               <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
-                <h2 className="text-2xl font-bold mb-4" style={{ color: BRAND.primary }}>
-                  Extracted Text Preview
-                </h2>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-2xl font-bold" style={{ color: BRAND.primary }}>
+                    Extracted Text Preview
+                  </h2>
+                  {result.fullText && (
+                    <button
+                      onClick={() => setShowFullText(!showFullText)}
+                      className="px-4 py-2 rounded-lg font-semibold text-sm transition-all hover:opacity-80"
+                      style={{
+                        backgroundColor: BRAND.background,
+                        color: BRAND.primary
+                      }}
+                    >
+                      {showFullText ? '📖 Show Less' : '📄 Show Full Text'}
+                    </button>
+                  )}
+                </div>
                 <div className="rounded-lg p-4 max-h-60 overflow-y-auto" style={{ backgroundColor: BRAND.lightGray }}>
                   <p className="whitespace-pre-wrap font-mono text-sm" style={{ color: BRAND.darkGray }}>
-                    {result.extractedText}...
+                    {showFullText && result.fullText ? result.fullText : result.extractedText + '...'}
                   </p>
                 </div>
                 <p className="text-xs mt-2" style={{ color: BRAND.darkGray }}>
-                  Showing first 500 characters
+                  {showFullText
+                    ? `Showing full text (${result.fullText?.length || 0} characters)`
+                    : 'Showing first 500 characters • Click "Show Full Text" to see what was actually checked'
+                  }
                 </p>
+                {result.scrapingMethod && (
+                  <p className="text-xs mt-1 font-semibold" style={{ color: BRAND.primary }}>
+                    ✨ Scraped using: {result.scrapingMethod} (Tier {result.scrapingMethod === 'cheerio' ? '1' : '2'})
+                  </p>
+                )}
               </div>
             )}
 

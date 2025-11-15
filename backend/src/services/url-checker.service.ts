@@ -121,7 +121,8 @@ class CheckerService {
         fileName: 'url-check',
         fileType: 'url',
         status: 'completed',
-        extractedText: text.substring(0, 500),
+        extractedText: text.substring(0, 500),  // Preview for display
+        fullText: text,  // ⭐ Full text for verification
         language,
         ocrUsed: false,
         issues: categorizedIssues,
@@ -129,7 +130,7 @@ class CheckerService {
         suggestions: aiResult.suggestions || [],
         processingTime: Date.now() - startTime,
         timestamp: new Date().toISOString()
-      };
+      } as any;
 
       // Save result to file
       await this.saveResult(result);
@@ -142,6 +143,7 @@ class CheckerService {
 
   /**
    * Filter issues to keep only those applicable to external URLs
+   * ⭐ ENHANCED: More aggressive filtering to reduce false positives
    */
   private filterUrlApplicableIssues(issues: any[]): any[] {
     return issues.filter(issue => {
@@ -150,7 +152,15 @@ class CheckerService {
         'variable_format',      // [Field: Name] checks
         'font_family',          // Font validation
         'color_validation',     // Brand color checks
-        'staging_url'          // Internal staging detection
+        'staging_url',          // Internal staging detection
+        'template_',            // Template-specific rules
+        'edm_',                 // EDM-specific rules
+      ];
+
+      // Exclude low-severity non-critical issues for URLs
+      const excludedCategoriesForUrls = [
+        'cta',                  // CTA optimization (websites have their own CTA strategy)
+        'tone',                 // Tone checks (less relevant for public websites)
       ];
 
       // Check if rule_id starts with excluded patterns
@@ -158,7 +168,11 @@ class CheckerService {
         issue.rule_id?.startsWith(pattern)
       );
 
-      return !isExcluded;
+      // Check if category should be excluded for URLs
+      const isCategoryExcluded = excludedCategoriesForUrls.includes(issue.category) &&
+                                  (issue.severity === 'low' || issue.severity === 'medium');
+
+      return !isExcluded && !isCategoryExcluded;
     });
   }
 

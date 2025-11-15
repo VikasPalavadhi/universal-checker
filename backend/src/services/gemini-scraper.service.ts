@@ -60,20 +60,27 @@ class GeminiScraperService {
       }
     });
 
-    const prompt = `You are a web scraping assistant. Extract the following information from this URL and return it as JSON:
+    const prompt = `You are a web scraping assistant. Extract ONLY the main content from this URL, EXCLUDING navigation, headers, footers, sidebars, and ads.
 
 URL: ${url}
+
+IMPORTANT RULES:
+- Extract ONLY the main article/content area
+- SKIP: navigation menus, headers, footers, sidebars, cookie banners, ads
+- Focus on the primary content that a user would read
+- Do NOT add any commentary or extra context
+- Be precise and factual - extract exactly what's on the page
 
 Extract:
 1. Page title (from <title> tag or main heading)
 2. Meta description (from meta tag)
-3. All H1 headings (array)
-4. All H2 headings (array, max 10)
-5. All H3 headings (array, max 10)
-6. All links/URLs found on the page (array, max 20)
-7. Main text content (clean, readable text without HTML tags)
+3. Main H1 headings from content area only (array, max 5)
+4. Main H2 headings from content area only (array, max 10)
+5. Main H3 headings from content area only (array, max 10)
+6. Important links from main content area only (array, max 15)
+7. Main text content (ONLY from main content area, NOT from navigation/footer)
 
-Return ONLY valid JSON in this exact format:
+Return ONLY valid JSON in this exact format with NO additional text:
 {
   "title": "page title here",
   "metaDescription": "meta description here",
