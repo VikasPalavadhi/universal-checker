@@ -2,7 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import { Upload, CheckCircle, AlertCircle, Loader2, Filter, X, Globe, Languages } from 'lucide-react';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3003/api';
+// Use relative URL in production, localhost for development
+const API_URL = import.meta.env.MODE === 'production' ? '/api' : 'http://localhost:3006/api';
 
 // 🎨 BRAND COLORS
 const BRAND = {
@@ -25,7 +26,9 @@ const LOADING_STEPS = [
 ];
 
 function App() {
+  const [mode, setMode] = useState<'file' | 'url'>('file');
   const [file, setFile] = useState<File | null>(null);
+  const [url, setUrl] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
@@ -92,6 +95,37 @@ function App() {
       setSelectedLanguage('all');
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to check file');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUrlCheck = async () => {
+    if (!url) return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios.post(`${API_URL}/check-url`, {
+        url: url.trim(),
+        content_type: 'web'
+      });
+
+      if (response.data.success) {
+        setResult(response.data.data);
+        setSelectedSeverity(null);
+        setSelectedCategory(null);
+        setSelectedLanguage('all');
+      } else {
+        setError(response.data.message || 'Failed to check URL');
+      }
+    } catch (err: any) {
+      if (err.response?.data?.error === 'MANUAL_PASTE_REQUIRED') {
+        setError('This URL requires manual paste. The site has strong anti-scraping protection.');
+      } else {
+        setError(err.response?.data?.message || err.response?.data?.error || 'Failed to check URL');
+      }
     } finally {
       setLoading(false);
     }
@@ -238,58 +272,146 @@ function App() {
         {/* Upload Section */}
         <div className="max-w-2xl mx-auto mb-8">
           <div className="bg-white rounded-2xl shadow-xl p-8">
-            <h2 className="text-2xl font-semibold mb-6" style={{ color: BRAND.primary }}>
-              Upload Your Content
-            </h2>
-            
-            <div 
-              className="border-2 border-dashed rounded-xl p-8 text-center transition-colors"
-              style={{ 
-                borderColor: file ? BRAND.primary : '#d1d5db',
-                backgroundColor: file ? BRAND.background : BRAND.white
-              }}
-            >
-              <Upload className="mx-auto mb-4" size={48} style={{ color: BRAND.darkGray }} />
-              
-              <input
-                type="file"
-                id="file-upload"
-                className="hidden"
-                onChange={handleFileChange}
-                accept=".html,.htm,.jpg,.jpeg,.png,.pdf,.docx"
-              />
-              
-              <label
-                htmlFor="file-upload"
-                className="cursor-pointer font-semibold hover:opacity-80 transition-opacity"
-                style={{ color: BRAND.primary }}
+            {/* Mode Switcher */}
+            <div className="flex gap-4 mb-6">
+              <button
+                onClick={() => { setMode('file'); setResult(null); setError(null); }}
+                className={`flex-1 py-3 px-6 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 ${
+                  mode === 'file' ? 'text-white' : 'border-2'
+                }`}
+                style={{
+                  backgroundColor: mode === 'file' ? BRAND.primary : BRAND.white,
+                  borderColor: BRAND.primary,
+                  color: mode === 'file' ? BRAND.white : BRAND.primary
+                }}
               >
-                {file ? file.name : 'Click to upload or drag and drop'}
-              </label>
-              
-              <p className="text-sm mt-2" style={{ color: BRAND.darkGray }}>
-                HTML, JPG, PNG, PDF (max 10MB)
-              </p>
+                <Upload size={20} />
+                Upload File
+              </button>
+              <button
+                onClick={() => { setMode('url'); setResult(null); setError(null); }}
+                className={`flex-1 py-3 px-6 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 ${
+                  mode === 'url' ? 'text-white' : 'border-2'
+                }`}
+                style={{
+                  backgroundColor: mode === 'url' ? BRAND.primary : BRAND.white,
+                  borderColor: BRAND.primary,
+                  color: mode === 'url' ? BRAND.white : BRAND.primary
+                }}
+              >
+                <Globe size={20} />
+                Check URL
+              </button>
             </div>
 
-            <button
-              onClick={handleUpload}
-              disabled={!file || loading}
-              className="w-full mt-6 py-4 rounded-xl font-semibold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 flex items-center justify-center gap-2"
-              style={{ backgroundColor: BRAND.primary }}
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="animate-spin" size={20} />
-                  Checking...
-                </>
-              ) : (
-                <>
-                  <CheckCircle size={20} />
-                  Check Content
-                </>
-              )}
-            </button>
+            <h2 className="text-2xl font-semibold mb-6" style={{ color: BRAND.primary }}>
+              {mode === 'file' ? 'Upload Your Content' : 'Check Website URL'}
+            </h2>
+            
+            {mode === 'file' ? (
+              <>
+                <div
+                  className="border-2 border-dashed rounded-xl p-8 text-center transition-colors"
+                  style={{
+                    borderColor: file ? BRAND.primary : '#d1d5db',
+                    backgroundColor: file ? BRAND.background : BRAND.white
+                  }}
+                >
+                  <Upload className="mx-auto mb-4" size={48} style={{ color: BRAND.darkGray }} />
+
+                  <input
+                    type="file"
+                    id="file-upload"
+                    className="hidden"
+                    onChange={handleFileChange}
+                    accept=".html,.htm,.jpg,.jpeg,.png,.pdf,.docx"
+                  />
+
+                  <label
+                    htmlFor="file-upload"
+                    className="cursor-pointer font-semibold hover:opacity-80 transition-opacity"
+                    style={{ color: BRAND.primary }}
+                  >
+                    {file ? file.name : 'Click to upload or drag and drop'}
+                  </label>
+
+                  <p className="text-sm mt-2" style={{ color: BRAND.darkGray }}>
+                    HTML, JPG, PNG, PDF (max 10MB)
+                  </p>
+                </div>
+
+                <button
+                  onClick={handleUpload}
+                  disabled={!file || loading}
+                  className="w-full mt-6 py-4 rounded-xl font-semibold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 flex items-center justify-center gap-2"
+                  style={{ backgroundColor: BRAND.primary }}
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="animate-spin" size={20} />
+                      Checking...
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle size={20} />
+                      Check Content
+                    </>
+                  )}
+                </button>
+              </>
+            ) : (
+              <>
+                <div
+                  className="border-2 rounded-xl p-6 transition-colors"
+                  style={{
+                    borderColor: url ? BRAND.primary : '#d1d5db',
+                    backgroundColor: BRAND.white
+                  }}
+                >
+                  <Globe className="mx-auto mb-4" size={48} style={{ color: BRAND.darkGray }} />
+
+                  <input
+                    type="url"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    placeholder="https://www.example.com"
+                    className="w-full px-4 py-3 rounded-lg border-2 transition-colors focus:outline-none focus:ring-2"
+                    style={{
+                      borderColor: '#d1d5db',
+                      color: BRAND.primary
+                    }}
+                    onFocus={(e) => e.target.style.borderColor = BRAND.primary}
+                    onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                  />
+
+                  <p className="text-sm mt-3" style={{ color: BRAND.darkGray }}>
+                    Enter any website URL to check for brand compliance
+                  </p>
+                  <p className="text-xs mt-1" style={{ color: BRAND.darkGray }}>
+                    ✨ Powered by AI • Handles Cloudflare protection • FREE Gemini AI tier
+                  </p>
+                </div>
+
+                <button
+                  onClick={handleUrlCheck}
+                  disabled={!url || loading}
+                  className="w-full mt-6 py-4 rounded-xl font-semibold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 flex items-center justify-center gap-2"
+                  style={{ backgroundColor: BRAND.primary }}
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="animate-spin" size={20} />
+                      Checking URL...
+                    </>
+                  ) : (
+                    <>
+                      <Globe size={20} />
+                      Check URL
+                    </>
+                  )}
+                </button>
+              </>
+            )}
           </div>
         </div>
 
