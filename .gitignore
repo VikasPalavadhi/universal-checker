@@ -13,4 +13,5 @@ backend/**/*.js
 backend/**/*.d.ts
 backend/**/*.map
 !backend/**/*.config.js
+!backend/test-*.js
 backend/dist/
