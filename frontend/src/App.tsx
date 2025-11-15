@@ -165,6 +165,7 @@ function App() {
 
   const getCategoryIcon = (category: string) => {
     const icons: any = {
+      // EDM Categories
       grammar: '📝',
       brand: '🏷️',
       numerical: '🔢',
@@ -174,12 +175,17 @@ function App() {
       tone: '🗣️',
       legal: '⚖️',
       accessibility: '♿',
+      // URL Website Categories
+      contentQuality: '✍️',
+      seo: '🔍',
+      technical: '⚙️',
     };
     return icons[category] || '📋';
   };
 
   const getCategoryLabel = (category: string) => {
     const labels: any = {
+      // EDM Categories
       grammar: 'Grammar & Spelling',
       brand: 'Brand Compliance',
       numerical: 'Numerical Format',
@@ -189,6 +195,10 @@ function App() {
       tone: 'Tone & Language',
       legal: 'Legal Compliance',
       accessibility: 'Accessibility',
+      // URL Website Categories
+      contentQuality: 'Content Quality',
+      seo: 'SEO Optimization',
+      technical: 'Technical Issues',
     };
     return labels[category] || category;
   };
@@ -698,6 +708,88 @@ function App() {
                 Total Issues: {result.metrics.totalIssues} • Processing Time: {(result.processingTime / 1000).toFixed(2)}s
               </div>
             </div>
+
+            {/* Category Scores - Only for URL checks */}
+            {result.fileType === 'url' && result.metrics.contentQualityScore !== undefined && (
+              <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+                <h2 className="text-2xl font-bold mb-6" style={{ color: BRAND.primary }}>
+                  Category Scores
+                </h2>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {/* Content Quality */}
+                  <div className="rounded-xl p-4 border-2" style={{ borderColor: BRAND.background }}>
+                    <div className="text-3xl mb-2">✍️</div>
+                    <div className="text-sm font-semibold mb-1" style={{ color: BRAND.darkGray }}>Content Quality</div>
+                    <div className={`text-3xl font-bold ${getScoreColor(result.metrics.contentQualityScore)}`}>
+                      {result.metrics.contentQualityScore}
+                    </div>
+                    <div className="text-xs mt-1" style={{ color: BRAND.darkGray }}>
+                      {result.issues.contentQuality?.length || 0} issues
+                    </div>
+                  </div>
+
+                  {/* SEO */}
+                  <div className="rounded-xl p-4 border-2" style={{ borderColor: BRAND.background }}>
+                    <div className="text-3xl mb-2">🔍</div>
+                    <div className="text-sm font-semibold mb-1" style={{ color: BRAND.darkGray }}>SEO Optimization</div>
+                    <div className={`text-3xl font-bold ${getScoreColor(result.metrics.seoScore)}`}>
+                      {result.metrics.seoScore}
+                    </div>
+                    <div className="text-xs mt-1" style={{ color: BRAND.darkGray }}>
+                      {result.issues.seo?.length || 0} issues
+                    </div>
+                  </div>
+
+                  {/* Technical */}
+                  <div className="rounded-xl p-4 border-2" style={{ borderColor: BRAND.background }}>
+                    <div className="text-3xl mb-2">⚙️</div>
+                    <div className="text-sm font-semibold mb-1" style={{ color: BRAND.darkGray }}>Technical Issues</div>
+                    <div className={`text-3xl font-bold ${getScoreColor(result.metrics.technicalScore)}`}>
+                      {result.metrics.technicalScore}
+                    </div>
+                    <div className="text-xs mt-1" style={{ color: BRAND.darkGray }}>
+                      {result.issues.technical?.length || 0} issues
+                    </div>
+                  </div>
+
+                  {/* Accessibility */}
+                  <div className="rounded-xl p-4 border-2" style={{ borderColor: BRAND.background }}>
+                    <div className="text-3xl mb-2">♿</div>
+                    <div className="text-sm font-semibold mb-1" style={{ color: BRAND.darkGray }}>Accessibility</div>
+                    <div className={`text-3xl font-bold ${getScoreColor(result.metrics.accessibilityScore)}`}>
+                      {result.metrics.accessibilityScore}
+                    </div>
+                    <div className="text-xs mt-1" style={{ color: BRAND.darkGray }}>
+                      {result.issues.accessibility?.length || 0} issues
+                    </div>
+                  </div>
+
+                  {/* Brand Compliance */}
+                  <div className="rounded-xl p-4 border-2" style={{ borderColor: BRAND.background }}>
+                    <div className="text-3xl mb-2">🏷️</div>
+                    <div className="text-sm font-semibold mb-1" style={{ color: BRAND.darkGray }}>Brand Compliance</div>
+                    <div className={`text-3xl font-bold ${getScoreColor(result.metrics.brandScore)}`}>
+                      {result.metrics.brandScore}
+                    </div>
+                    <div className="text-xs mt-1" style={{ color: BRAND.darkGray }}>
+                      {result.issues.brand?.length || 0} issues
+                    </div>
+                  </div>
+
+                  {/* Legal */}
+                  <div className="rounded-xl p-4 border-2" style={{ borderColor: BRAND.background }}>
+                    <div className="text-3xl mb-2">⚖️</div>
+                    <div className="text-sm font-semibold mb-1" style={{ color: BRAND.darkGray }}>Legal & Compliance</div>
+                    <div className={`text-3xl font-bold ${getScoreColor(result.metrics.legalScore)}`}>
+                      {result.metrics.legalScore}
+                    </div>
+                    <div className="text-xs mt-1" style={{ color: BRAND.darkGray }}>
+                      {result.issues.legal?.length || 0} issues
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Extracted Text Preview */}
             {result.extractedText && (

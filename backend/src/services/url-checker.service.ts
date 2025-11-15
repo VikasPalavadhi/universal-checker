@@ -15,17 +15,9 @@ interface CheckResult {
   ocrUsed: boolean;
   ocrConfidence?: number;
 
-  // Issues categorized by type
+  // Issues categorized by type (flexible for both EDM and URL checks)
   issues: {
-    grammar: any[];
-    brand: any[];
-    numerical: any[];
-    links: any[];
-    images: any[];
-    cta: any[];
-    tone: any[];
-    legal: any[];
-    accessibility: any[];
+    [key: string]: any[];
   };
 
   // Summary metrics
@@ -36,6 +28,13 @@ interface CheckResult {
     mediumIssues: number;
     lowIssues: number;
     complianceScore: number;
+    // Category-specific scores (for URLs)
+    contentQualityScore?: number;
+    seoScore?: number;
+    technicalScore?: number;
+    accessibilityScore?: number;
+    brandScore?: number;
+    legalScore?: number;
   };
 
   suggestions: string[];
@@ -259,24 +258,66 @@ class CheckerService {
   }
 
   /**
-   * Categorize issues by type
+   * Categorize issues by type - WEB-SPECIFIC CATEGORIES
+   * Different from EDM categorization for better website analysis
    */
   private categorizeIssues(issues: any[]) {
     return {
-      grammar: issues.filter(i => i.type === 'grammar' || i.category === 'grammar'),
-      brand: issues.filter(i => i.category === 'brand_compliance' || i.category === 'brand_voice'),
-      numerical: issues.filter(i => i.category === 'numerical_format'),
-      links: issues.filter(i => i.type === 'link_validation' || i.category === 'broken_links'),
-      images: issues.filter(i => i.type === 'image_validation'),
-      cta: issues.filter(i => i.category === 'cta'),
-      tone: issues.filter(i => i.category === 'tone'),
-      legal: issues.filter(i => i.category === 'legal_compliance'),
-      accessibility: issues.filter(i => i.category?.includes('accessibility'))
+      // Content Quality: Grammar, spelling, readability
+      contentQuality: issues.filter(i =>
+        i.type === 'grammar' ||
+        i.category === 'grammar' ||
+        i.category === 'spelling' ||
+        i.category === 'tone' ||
+        i.category === 'readability'
+      ),
+
+      // SEO: Meta tags, headings, keywords, structure
+      seo: issues.filter(i =>
+        i.category === 'seo' ||
+        i.category === 'meta' ||
+        i.category === 'heading_structure' ||
+        i.category === 'keywords'
+      ),
+
+      // Technical: Links, images, loading, errors
+      technical: issues.filter(i =>
+        i.type === 'link_validation' ||
+        i.category === 'broken_links' ||
+        i.type === 'image_validation' ||
+        i.category === 'performance' ||
+        i.category === 'errors'
+      ),
+
+      // Accessibility: ARIA, alt text, contrast, semantic HTML
+      accessibility: issues.filter(i =>
+        i.category?.includes('accessibility') ||
+        i.category === 'aria' ||
+        i.category === 'alt_text' ||
+        i.category === 'contrast'
+      ),
+
+      // Brand Compliance: Brand name, voice, messaging
+      brand: issues.filter(i =>
+        i.category === 'brand_compliance' ||
+        i.category === 'brand_voice' ||
+        i.category === 'brand_name' ||
+        i.category === 'numerical_format'
+      ),
+
+      // Legal & Compliance: Privacy, terms, disclaimers
+      legal: issues.filter(i =>
+        i.category === 'legal_compliance' ||
+        i.category === 'privacy' ||
+        i.category === 'disclaimer' ||
+        i.category === 'copyright'
+      )
     };
   }
 
   /**
    * Calculate metrics and compliance score
+   * ⭐ ENHANCED: Includes category-specific scores for URL checks
    */
   private calculateMetrics(issues: any) {
     const allIssues = Object.values(issues).flat() as any[];
@@ -286,7 +327,7 @@ class CheckerService {
     const mediumCount = allIssues.filter(i => i.severity === 'medium').length;
     const lowCount = allIssues.filter(i => i.severity === 'low').length;
 
-    // Calculate compliance score (start at 100, subtract points)
+    // Calculate overall compliance score (start at 100, subtract points)
     const score = Math.max(0, 100 - (
       (criticalCount * 20) +
       (highCount * 10) +
@@ -294,13 +335,30 @@ class CheckerService {
       (lowCount * 2)
     ));
 
+    // Helper function to calculate category score
+    const calculateCategoryScore = (categoryIssues: any[]) => {
+      if (categoryIssues.length === 0) return 100;
+      const penalty = categoryIssues.reduce((sum, issue) => {
+        const weights = { critical: 25, high: 15, medium: 8, low: 3 };
+        return sum + (weights[issue.severity as keyof typeof weights] || 5);
+      }, 0);
+      return Math.max(0, 100 - penalty);
+    };
+
     return {
       totalIssues: allIssues.length,
       criticalIssues: criticalCount,
       highIssues: highCount,
       mediumIssues: mediumCount,
       lowIssues: lowCount,
-      complianceScore: score
+      complianceScore: score,
+      // Category-specific scores for URL checks
+      contentQualityScore: calculateCategoryScore(issues.contentQuality || []),
+      seoScore: calculateCategoryScore(issues.seo || []),
+      technicalScore: calculateCategoryScore(issues.technical || []),
+      accessibilityScore: calculateCategoryScore(issues.accessibility || []),
+      brandScore: calculateCategoryScore(issues.brand || []),
+      legalScore: calculateCategoryScore(issues.legal || [])
     };
   }
 
