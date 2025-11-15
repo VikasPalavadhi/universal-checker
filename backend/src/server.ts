@@ -12,6 +12,10 @@ import uploadRoutes from './routes/upload.routes';
 const app = express();
 const PORT = process.env.PORT || 3003;
 
+// ⭐ IMPORTANT: Trust proxy for rate limiting behind Nginx
+// This allows express-rate-limit to correctly identify users by their real IP
+app.set('trust proxy', true);
+
 app.use(cors());
 app.use(express.json());
 
