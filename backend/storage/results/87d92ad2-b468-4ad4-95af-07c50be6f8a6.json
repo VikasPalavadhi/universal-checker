@@ -1,0 +1,124 @@
+{
+  "id": "87d92ad2-b468-4ad4-95af-07c50be6f8a6",
+  "fileName": "text-check",
+  "fileType": "text",
+  "status": "completed",
+  "extractedText": "\n    Dear [Field: Customer Name],\n\n    Get amazing interest rate on your personal loan!\n    Click here to learn more.\n\n    Visit staging.emiratesnbd.com for details.\n    Contact us at test@gmail.com\n  ",
+  "language": "eng",
+  "languages": [
+    "eng"
+  ],
+  "isBilingual": false,
+  "ocrUsed": false,
+  "issues": {
+    "grammar": [],
+    "brand": [
+      {
+        "rule_id": "brand_term_001",
+        "type": "brand_compliance",
+        "category": "brand_compliance",
+        "severity": "critical",
+        "message": "Use \"profit rate\" instead of \"interest rate\" for Sharia compliance",
+        "original": "interest rate",
+        "position": 51,
+        "length": 13,
+        "suggestion": "profit rate"
+      },
+      {
+        "rule_id": "staging_url_001",
+        "type": "brand_compliance",
+        "category": "deployment",
+        "severity": "critical",
+        "message": "Staging/test URL detected - must use production URLs",
+        "original": "staging.emiratesnbd.com",
+        "position": 129,
+        "length": 23,
+        "suggestion": "Replace with www.emiratesnbd.com"
+      },
+      {
+        "rule_id": "production_url_001",
+        "type": "brand_compliance",
+        "category": "deployment",
+        "severity": "low",
+        "message": "URL should use proper subdomain",
+        "original": "emiratesnbd.com",
+        "position": 137,
+        "length": 15,
+        "suggestion": "Use www.emiratesnbd.com or cdn.emiratesnbd.com"
+      },
+      {
+        "rule_id": "email_format_001",
+        "type": "brand_compliance",
+        "category": "contact_info",
+        "severity": "high",
+        "message": "Use official Emirates NBD email addresses only",
+        "original": "test@gmail.com",
+        "position": 184,
+        "length": 14,
+        "suggestion": "Contact emails should be @emiratesnbd.com or @emiratesislamic.ae"
+      }
+    ],
+    "numerical": [],
+    "links": [],
+    "images": [],
+    "cta": [
+      {
+        "rule_id": "cta_001",
+        "type": "brand_compliance",
+        "category": "cta",
+        "severity": "medium",
+        "message": "Generic CTA detected - use more specific and action-oriented text",
+        "original": "Click here",
+        "position": 92,
+        "length": 10,
+        "suggestion": "Examples: \"Apply Now\", \"Start Earning Rewards\", \"Get Your Free Quote\""
+      },
+      {
+        "rule_id": "cta_001",
+        "type": "brand_compliance",
+        "category": "cta",
+        "severity": "medium",
+        "message": "Generic CTA detected - use more specific and action-oriented text",
+        "original": "learn more",
+        "position": 106,
+        "length": 10,
+        "suggestion": "Examples: \"Apply Now\", \"Start Earning Rewards\", \"Get Your Free Quote\""
+      },
+      {
+        "rule_id": "cta_optimization",
+        "type": "cta_optimization",
+        "category": "cta",
+        "severity": "medium",
+        "message": "Generic CTA detected",
+        "original": "",
+        "suggestion": "Use action-oriented CTAs: \"Apply Now\", \"Start Earning\", \"Get Your Quote\""
+      }
+    ],
+    "tone": [
+      {
+        "rule_id": "tone_001",
+        "type": "brand_compliance",
+        "category": "tone",
+        "severity": "medium",
+        "message": "Avoid overly casual language in financial communications",
+        "original": "amazing",
+        "position": 43,
+        "length": 7,
+        "suggestion": "Use professional alternatives: \"excellent\", \"exceptional\", \"outstanding\""
+      }
+    ],
+    "legal": [],
+    "accessibility": []
+  },
+  "metrics": {
+    "totalIssues": 8,
+    "criticalIssues": 2,
+    "highIssues": 1,
+    "mediumIssues": 4,
+    "lowIssues": 1,
+    "complianceScore": 28
+  },
+  "suggestions": [],
+  "processingTime": 1,
+  "timestamp": "2025-11-15T09:58:20.058Z"
+}

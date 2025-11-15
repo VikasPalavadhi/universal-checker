@@ -108,7 +108,7 @@ rules:
   - id: font_family_001
     category: brand_compliance
     severity: critical
-    pattern: 'font-family:\s*["\']?(?!IBM Plex Sans|sans-serif)'
+    pattern: "font-family:\\s*[\"']?(?!IBM Plex Sans|sans-serif)"
     message: 'Invalid font family for PB_Font files'
     suggestion: 'Use "IBM Plex Sans, sans-serif" for PB_Font files'
     applies_to: [edm, web]
@@ -116,7 +116,7 @@ rules:
   - id: font_family_002
     category: brand_compliance
     severity: critical
-    pattern: 'font-family:\s*["\']?(?!Plus Jakarta Sans)'
+    pattern: "font-family:\\s*[\"']?(?!Plus Jakarta Sans)"
     message: 'Invalid font family for non-PB_Font files'
     suggestion: 'Use "Plus Jakarta Sans" for regular files'
     applies_to: [edm, web]

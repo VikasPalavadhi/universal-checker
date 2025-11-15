@@ -6,7 +6,7 @@
 const fetch = require('node-fetch');
 require('dotenv').config();
 
-const API_URL = 'http://localhost:3006/api/check-url';
+const API_URL = 'http://localhost:3003/api/check-url';
 
 // Test URLs
 const testUrls = [
