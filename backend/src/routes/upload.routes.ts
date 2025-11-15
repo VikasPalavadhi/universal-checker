@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import multer from 'multer';
 import path from 'path';
 import { checkerService } from '../services/checker.service';
+import { urlScraperService } from '../services/url-scraper.service';
 
 const router = Router();
 
@@ -93,6 +94,90 @@ router.post('/check-text', async (req: Request, res: Response) => {
       success: false,
       error: error.message,
       message: 'Failed to check text'
+    });
+  }
+});
+
+/**
+ * POST /api/check-url
+ * Check URL by scraping and analyzing content
+ * Uses 3-tier approach: cheerio → Gemini AI → manual paste
+ */
+router.post('/check-url', async (req: Request, res: Response) => {
+  try {
+    const { url, content_type } = req.body;
+
+    if (!url || url.trim().length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'No URL provided',
+        message: 'Please provide a URL to check'
+      });
+    }
+
+    // Validate URL format
+    try {
+      new URL(url);
+    } catch {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid URL format',
+        message: 'Please provide a valid URL (e.g., https://example.com)'
+      });
+    }
+
+    console.log(`🌐 Checking URL: ${url}`);
+
+    // Step 1: Scrape the URL (3-tier: cheerio → Gemini → manual)
+    const scrapedContent = await urlScraperService.scrapeUrl(url);
+
+    console.log(`✅ Scraped successfully using: ${scrapedContent.method}`);
+    console.log(`  → Title: ${scrapedContent.title}`);
+    console.log(`  → Text length: ${scrapedContent.text.length} chars`);
+
+    // Step 2: Analyze the scraped content
+    const result = await checkerService.checkText(scrapedContent.text, content_type || 'edm');
+
+    // Add scraping metadata to result
+    const enhancedResult = {
+      ...result,
+      url: scrapedContent.url,
+      scrapingMethod: scrapedContent.method,
+      pageTitle: scrapedContent.title,
+      redirectedTo: scrapedContent.redirectedTo,
+    };
+
+    res.json({
+      success: true,
+      data: enhancedResult,
+      meta: {
+        scrapingMethod: scrapedContent.method,
+        tier: scrapedContent.method === 'cheerio' ? 1 :
+              scrapedContent.method.includes('gemini') ? 2 : 3,
+        message: scrapedContent.method === 'cheerio'
+          ? 'Fast scraping with cheerio'
+          : scrapedContent.method.includes('gemini')
+          ? 'Used Gemini AI to bypass protection (FREE tier)'
+          : 'Manual paste required'
+      }
+    });
+  } catch (error: any) {
+    console.error('❌ URL check error:', error);
+
+    // Check if it's a manual paste required error
+    if (error.message.includes('MANUAL_PASTE_REQUIRED')) {
+      return res.status(422).json({
+        success: false,
+        error: 'MANUAL_PASTE_REQUIRED',
+        message: error.message,
+        suggestion: 'Please copy the page HTML manually and use the /api/check-text endpoint instead'
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      message: 'Failed to check URL'
     });
   }
 });
