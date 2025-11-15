@@ -7,6 +7,8 @@ interface GeminiScrapedContent {
   text: string;
   title: string;
   metaDescription: string;
+  ogTitle?: string;
+  ogDescription?: string;
   headings: {
     h1: string[];
     h2: string[];
@@ -74,16 +76,20 @@ IMPORTANT RULES:
 Extract:
 1. Page title (from <title> tag or main heading)
 2. Meta description (from meta tag)
-3. Main H1 headings from content area only (array, max 5)
-4. Main H2 headings from content area only (array, max 10)
-5. Main H3 headings from content area only (array, max 10)
-6. Important links from main content area only (array, max 15)
-7. Main text content (ONLY from main content area, NOT from navigation/footer)
+3. OG title (from og:title meta tag, if available)
+4. OG description (from og:description meta tag, if available)
+5. Main H1 headings from content area only (array, max 5)
+6. Main H2 headings from content area only (array, max 10)
+7. Main H3 headings from content area only (array, max 10)
+8. Important links from main content area only (array, max 15)
+9. Main text content (ONLY from main content area, NOT from navigation/footer)
 
 Return ONLY valid JSON in this exact format with NO additional text:
 {
   "title": "page title here",
   "metaDescription": "meta description here",
+  "ogTitle": "og:title here or empty string if not found",
+  "ogDescription": "og:description here or empty string if not found",
   "h1": ["h1 text"],
   "h2": ["h2 text 1", "h2 text 2"],
   "h3": ["h3 text 1", "h3 text 2"],
@@ -109,6 +115,8 @@ Return ONLY valid JSON in this exact format with NO additional text:
         text: extracted.text || '',
         title: extracted.title || 'No title',
         metaDescription: extracted.metaDescription || '',
+        ogTitle: extracted.ogTitle || '',
+        ogDescription: extracted.ogDescription || '',
         headings: {
           h1: extracted.h1 || [],
           h2: extracted.h2 || [],
@@ -141,6 +149,8 @@ Extract the following information and return as JSON:
 {
   "title": "page title",
   "metaDescription": "meta description",
+  "ogTitle": "og:title meta tag value or empty string",
+  "ogDescription": "og:description meta tag value or empty string",
   "h1": ["h1 headings"],
   "h2": ["h2 headings"],
   "h3": ["h3 headings"],
@@ -172,6 +182,8 @@ Only return valid JSON.`;
         text: extracted.text || '',
         title: extracted.title || 'No title',
         metaDescription: extracted.metaDescription || '',
+        ogTitle: extracted.ogTitle || '',
+        ogDescription: extracted.ogDescription || '',
         headings: {
           h1: extracted.h1 || [],
           h2: extracted.h2 || [],
@@ -196,6 +208,14 @@ Only return valid JSON.`;
 
     if (content.metaDescription) {
       html += `<meta name="description" content="${content.metaDescription}">`;
+    }
+
+    if (content.ogTitle) {
+      html += `<meta property="og:title" content="${content.ogTitle}">`;
+    }
+
+    if (content.ogDescription) {
+      html += `<meta property="og:description" content="${content.ogDescription}">`;
     }
 
     html += `</head><body>`;

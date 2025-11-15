@@ -140,7 +140,8 @@ router.post('/check-url', async (req: Request, res: Response) => {
     const result = await urlCheckerService.checkUrl(
       scrapedContent.html || '',
       scrapedContent.text,
-      content_type || 'web'
+      content_type || 'web',
+      scrapedContent.seoMetadata  // ⭐ Pass SEO metadata for validation
     );
 
     // Add scraping metadata to result
@@ -150,6 +151,7 @@ router.post('/check-url', async (req: Request, res: Response) => {
       scrapingMethod: scrapedContent.method,
       pageTitle: scrapedContent.title,
       redirectedTo: scrapedContent.redirectedTo,
+      seoMetadata: scrapedContent.seoMetadata,
     };
 
     res.json({

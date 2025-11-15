@@ -51,7 +51,17 @@ class CheckerService {
    * - Color validation (brand colors for uploaded files)
    * - Staging URL detection (internal only)
    */
-  async checkUrl(html: string, text: string, contentType: string = 'web'): Promise<CheckResult> {
+  async checkUrl(
+    html: string,
+    text: string,
+    contentType: string = 'web',
+    seoMetadata?: {
+      metaTitle: string;
+      metaDescription: string;
+      ogTitle: string;
+      ogDescription: string;
+    }
+  ): Promise<CheckResult> {
     const startTime = Date.now();
     const checkId = uuidv4();
 
@@ -88,6 +98,9 @@ class CheckerService {
         html ? Promise.resolve(rulesEngine.validateImages(html)) : Promise.resolve([])
       ]);
 
+      // ⭐ NEW: Validate SEO metadata
+      const seoIssues = this.validateSeoMetadata(seoMetadata);
+
       // ⭐ SKIP these URL-inappropriate checks:
       // - validateCustomVariables (EDM templates only)
       // - validateFontFamily (uploaded HTML files only)
@@ -102,7 +115,8 @@ class CheckerService {
         ...numericalIssues,
         ...ctaIssues,
         ...linkIssues,
-        ...imageIssues
+        ...imageIssues,
+        ...seoIssues  // ⭐ NEW: SEO metadata validation
       ];
 
       // Filter out EDM-specific issues
@@ -138,6 +152,115 @@ class CheckerService {
     } catch (error: any) {
       throw new Error(`URL check failed: ${error.message}`);
     }
+  }
+
+  /**
+   * ⭐ NEW: Validate SEO metadata and flag critical issues
+   */
+  private validateSeoMetadata(seoMetadata?: {
+    metaTitle: string;
+    metaDescription: string;
+    ogTitle: string;
+    ogDescription: string;
+  }): any[] {
+    const issues: any[] = [];
+
+    if (!seoMetadata) {
+      return issues;
+    }
+
+    const { metaTitle, metaDescription, ogTitle, ogDescription } = seoMetadata;
+
+    // Critical: Missing meta title
+    if (!metaTitle || metaTitle.trim().length === 0) {
+      issues.push({
+        type: 'seo_validation',
+        category: 'seo',
+        severity: 'critical',
+        message: 'Missing meta title tag',
+        suggestion: 'Add a <title> tag to improve SEO and user experience',
+        rule_id: 'seo_meta_title_missing'
+      });
+    } else {
+      // High: Title too short or too long
+      if (metaTitle.length < 30) {
+        issues.push({
+          type: 'seo_validation',
+          category: 'seo',
+          severity: 'high',
+          message: `Meta title is too short (${metaTitle.length} chars). Recommended: 30-60 characters`,
+          suggestion: 'Expand the title to include more descriptive keywords',
+          rule_id: 'seo_meta_title_short'
+        });
+      } else if (metaTitle.length > 60) {
+        issues.push({
+          type: 'seo_validation',
+          category: 'seo',
+          severity: 'medium',
+          message: `Meta title is too long (${metaTitle.length} chars). Recommended: 30-60 characters`,
+          suggestion: 'Shorten the title to prevent truncation in search results',
+          rule_id: 'seo_meta_title_long'
+        });
+      }
+    }
+
+    // Critical: Missing meta description
+    if (!metaDescription || metaDescription.trim().length === 0) {
+      issues.push({
+        type: 'seo_validation',
+        category: 'seo',
+        severity: 'critical',
+        message: 'Missing meta description tag',
+        suggestion: 'Add a meta description to improve click-through rates from search results',
+        rule_id: 'seo_meta_description_missing'
+      });
+    } else {
+      // Medium: Description too short or too long
+      if (metaDescription.length < 100) {
+        issues.push({
+          type: 'seo_validation',
+          category: 'seo',
+          severity: 'medium',
+          message: `Meta description is too short (${metaDescription.length} chars). Recommended: 100-160 characters`,
+          suggestion: 'Expand the description to provide more context',
+          rule_id: 'seo_meta_description_short'
+        });
+      } else if (metaDescription.length > 160) {
+        issues.push({
+          type: 'seo_validation',
+          category: 'seo',
+          severity: 'medium',
+          message: `Meta description is too long (${metaDescription.length} chars). Recommended: 100-160 characters`,
+          suggestion: 'Shorten the description to prevent truncation',
+          rule_id: 'seo_meta_description_long'
+        });
+      }
+    }
+
+    // Medium: Missing OG tags (important for social sharing)
+    if (!ogTitle || ogTitle.trim().length === 0) {
+      issues.push({
+        type: 'seo_validation',
+        category: 'seo',
+        severity: 'medium',
+        message: 'Missing Open Graph title (og:title)',
+        suggestion: 'Add og:title meta tag to improve social media sharing',
+        rule_id: 'seo_og_title_missing'
+      });
+    }
+
+    if (!ogDescription || ogDescription.trim().length === 0) {
+      issues.push({
+        type: 'seo_validation',
+        category: 'seo',
+        severity: 'medium',
+        message: 'Missing Open Graph description (og:description)',
+        suggestion: 'Add og:description meta tag to improve social media sharing',
+        rule_id: 'seo_og_description_missing'
+      });
+    }
+
+    return issues;
   }
 
   /**

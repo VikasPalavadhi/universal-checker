@@ -791,6 +791,143 @@ function App() {
               </div>
             )}
 
+            {/* SEO Metadata - Only for URL checks */}
+            {result.fileType === 'url' && result.seoMetadata && (
+              <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold" style={{ color: BRAND.primary }}>
+                    🔍 SEO Metadata
+                  </h2>
+                  {result.issues.seo && result.issues.seo.some((i: any) => i.severity === 'critical') && (
+                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700">
+                      ⚠️ Critical Issues Found
+                    </span>
+                  )}
+                </div>
+
+                <div className="space-y-4">
+                  {/* Meta Title */}
+                  <div className="rounded-lg p-4 border-2" style={{
+                    borderColor: result.seoMetadata.metaTitle ? BRAND.background : '#FEE2E2',
+                    backgroundColor: result.seoMetadata.metaTitle ? '#F9FAFB' : '#FEF2F2'
+                  }}>
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="font-semibold text-sm" style={{ color: BRAND.darkGray }}>
+                        📄 Meta Title
+                      </div>
+                      {!result.seoMetadata.metaTitle && (
+                        <span className="px-2 py-1 rounded text-xs font-bold bg-red-100 text-red-700">
+                          Missing
+                        </span>
+                      )}
+                      {result.seoMetadata.metaTitle && result.seoMetadata.metaTitle.length < 30 && (
+                        <span className="px-2 py-1 rounded text-xs font-bold bg-orange-100 text-orange-700">
+                          Too Short
+                        </span>
+                      )}
+                      {result.seoMetadata.metaTitle && result.seoMetadata.metaTitle.length > 60 && (
+                        <span className="px-2 py-1 rounded text-xs font-bold bg-yellow-100 text-yellow-700">
+                          Too Long
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-sm" style={{ color: BRAND.darkGray }}>
+                      {result.seoMetadata.metaTitle || <span className="italic text-red-600">No meta title found</span>}
+                    </div>
+                    {result.seoMetadata.metaTitle && (
+                      <div className="text-xs mt-1" style={{ color: BRAND.darkGray }}>
+                        {result.seoMetadata.metaTitle.length} characters (recommended: 30-60)
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Meta Description */}
+                  <div className="rounded-lg p-4 border-2" style={{
+                    borderColor: result.seoMetadata.metaDescription ? BRAND.background : '#FEE2E2',
+                    backgroundColor: result.seoMetadata.metaDescription ? '#F9FAFB' : '#FEF2F2'
+                  }}>
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="font-semibold text-sm" style={{ color: BRAND.darkGray }}>
+                        📝 Meta Description
+                      </div>
+                      {!result.seoMetadata.metaDescription && (
+                        <span className="px-2 py-1 rounded text-xs font-bold bg-red-100 text-red-700">
+                          Missing
+                        </span>
+                      )}
+                      {result.seoMetadata.metaDescription && result.seoMetadata.metaDescription.length < 100 && (
+                        <span className="px-2 py-1 rounded text-xs font-bold bg-yellow-100 text-yellow-700">
+                          Too Short
+                        </span>
+                      )}
+                      {result.seoMetadata.metaDescription && result.seoMetadata.metaDescription.length > 160 && (
+                        <span className="px-2 py-1 rounded text-xs font-bold bg-yellow-100 text-yellow-700">
+                          Too Long
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-sm" style={{ color: BRAND.darkGray }}>
+                      {result.seoMetadata.metaDescription || <span className="italic text-red-600">No meta description found</span>}
+                    </div>
+                    {result.seoMetadata.metaDescription && (
+                      <div className="text-xs mt-1" style={{ color: BRAND.darkGray }}>
+                        {result.seoMetadata.metaDescription.length} characters (recommended: 100-160)
+                      </div>
+                    )}
+                  </div>
+
+                  {/* OG Tags */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* OG Title */}
+                    <div className="rounded-lg p-4 border-2" style={{
+                      borderColor: result.seoMetadata.ogTitle ? BRAND.background : '#FEF3C7',
+                      backgroundColor: result.seoMetadata.ogTitle ? '#F9FAFB' : '#FFFBEB'
+                    }}>
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="font-semibold text-sm" style={{ color: BRAND.darkGray }}>
+                          🔗 OG Title
+                        </div>
+                        {!result.seoMetadata.ogTitle && (
+                          <span className="px-2 py-1 rounded text-xs font-bold bg-yellow-100 text-yellow-700">
+                            Missing
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-xs" style={{ color: BRAND.darkGray }}>
+                        {result.seoMetadata.ogTitle || <span className="italic text-yellow-600">No OG title (for social media sharing)</span>}
+                      </div>
+                    </div>
+
+                    {/* OG Description */}
+                    <div className="rounded-lg p-4 border-2" style={{
+                      borderColor: result.seoMetadata.ogDescription ? BRAND.background : '#FEF3C7',
+                      backgroundColor: result.seoMetadata.ogDescription ? '#F9FAFB' : '#FFFBEB'
+                    }}>
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="font-semibold text-sm" style={{ color: BRAND.darkGray }}>
+                          🔗 OG Description
+                        </div>
+                        {!result.seoMetadata.ogDescription && (
+                          <span className="px-2 py-1 rounded text-xs font-bold bg-yellow-100 text-yellow-700">
+                            Missing
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-xs" style={{ color: BRAND.darkGray }}>
+                        {result.seoMetadata.ogDescription || <span className="italic text-yellow-600">No OG description (for social media sharing)</span>}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-4 p-3 rounded-lg" style={{ backgroundColor: '#EFF6FF' }}>
+                  <p className="text-xs" style={{ color: '#1E40AF' }}>
+                    💡 <strong>Tip:</strong> Meta tags help search engines understand your content. OG tags improve how your page looks when shared on social media.
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* Extracted Text Preview */}
             {result.extractedText && (
               <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">

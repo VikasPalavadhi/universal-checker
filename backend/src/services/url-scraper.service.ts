@@ -12,6 +12,12 @@ export interface ScrapedContent {
   redirectedTo?: string;
   method: 'cheerio' | 'gemini-url-context' | 'gemini-search' | 'manual';
   scrapingError?: string;
+  seoMetadata?: {
+    metaTitle: string;
+    metaDescription: string;
+    ogTitle: string;
+    ogDescription: string;
+  };
 }
 
 class UrlScraperService {
@@ -55,6 +61,12 @@ class UrlScraperService {
             statusCode: 200,
             contentType: 'text/html',
             method: geminiResult.method,
+            seoMetadata: {
+              metaTitle: geminiResult.title,
+              metaDescription: geminiResult.metaDescription || '',
+              ogTitle: geminiResult.ogTitle || '',
+              ogDescription: geminiResult.ogDescription || '',
+            },
           };
         } catch (geminiError: any) {
           console.log(`❌ [Tier 2] Gemini also failed: ${geminiError.message}`);
@@ -121,6 +133,14 @@ class UrlScraperService {
       // Parse HTML and extract text
       const $ = cheerio.load(html);
 
+      // Extract SEO metadata BEFORE removing elements
+      const seoMetadata = {
+        metaTitle: $('title').text().trim() || '',
+        metaDescription: $('meta[name="description"]').attr('content')?.trim() || '',
+        ogTitle: $('meta[property="og:title"]').attr('content')?.trim() || '',
+        ogDescription: $('meta[property="og:description"]').attr('content')?.trim() || '',
+      };
+
       // Remove script, style, and non-content elements
       $('script, style, noscript').remove();
 
@@ -162,6 +182,7 @@ class UrlScraperService {
         contentType,
         redirectedTo: response.url !== url ? response.url : undefined,
         method: 'cheerio',
+        seoMetadata,
       };
     } catch (error: any) {
       console.error(`  → Cheerio error: ${error.message}`);
