@@ -2,8 +2,9 @@ import { useState, useRef, useEffect } from 'react';
 import { Upload, CheckCircle, AlertCircle, Loader2, Filter, X, Globe, Languages } from 'lucide-react';
 import axios from 'axios';
 
-// Use relative URL in production, localhost for development
-const API_URL = import.meta.env.MODE === 'production' ? '/api' : 'http://localhost:3006/api';
+// Use environment variable or default to production URL if deployed, localhost if local
+const API_URL = import.meta.env.VITE_API_URL ||
+  (window.location.hostname === 'localhost' ? 'http://localhost:3006/api' : '/api');
 
 // 🎨 BRAND COLORS
 const BRAND = {
