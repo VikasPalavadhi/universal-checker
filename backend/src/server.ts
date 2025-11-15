@@ -13,8 +13,8 @@ const app = express();
 const PORT = process.env.PORT || 3003;
 
 // ⭐ IMPORTANT: Trust proxy for rate limiting behind Nginx
-// This allows express-rate-limit to correctly identify users by their real IP
-app.set('trust proxy', true);
+// Only trust localhost (127.0.0.1) where Nginx is running
+app.set('trust proxy', 'loopback');
 
 app.use(cors());
 app.use(express.json());

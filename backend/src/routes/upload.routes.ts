@@ -154,6 +154,8 @@ router.post('/check-url', async (req: Request, res: Response) => {
       seoMetadata: scrapedContent.seoMetadata,
     };
 
+    console.log('📊 SEO Metadata:', JSON.stringify(scrapedContent.seoMetadata, null, 2));
+
     res.json({
       success: true,
       data: enhancedResult,
