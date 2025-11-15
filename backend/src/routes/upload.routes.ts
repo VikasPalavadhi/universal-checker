@@ -3,6 +3,7 @@ import multer from 'multer';
 import path from 'path';
 import { checkerService } from '../services/checker.service';
 import { urlScraperService } from '../services/url-scraper.service';
+import { checkerService as urlCheckerService } from '../services/url-checker.service';
 
 const router = Router();
 
@@ -135,8 +136,12 @@ router.post('/check-url', async (req: Request, res: Response) => {
     console.log(`  → Title: ${scrapedContent.title}`);
     console.log(`  → Text length: ${scrapedContent.text.length} chars`);
 
-    // Step 2: Analyze the scraped content
-    const result = await checkerService.checkText(scrapedContent.text, content_type || 'edm');
+    // Step 2: Analyze with URL-specific checks only (excludes EDM-specific rules)
+    const result = await urlCheckerService.checkUrl(
+      scrapedContent.html || '',
+      scrapedContent.text,
+      content_type || 'web'
+    );
 
     // Add scraping metadata to result
     const enhancedResult = {
