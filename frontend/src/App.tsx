@@ -6,6 +6,13 @@ import axios from 'axios';
 const API_URL = import.meta.env.VITE_API_URL ||
   (window.location.hostname === 'localhost' ? 'http://localhost:3006/api' : '/api');
 
+// ⭐ SECURITY: Basic Authentication Credentials
+const API_USERNAME = import.meta.env.VITE_API_USERNAME || 'emaar_admin';
+const API_PASSWORD = import.meta.env.VITE_API_PASSWORD || 'SecurePassword123!';
+
+// Create auth header
+const authHeader = 'Basic ' + btoa(`${API_USERNAME}:${API_PASSWORD}`);
+
 // 🎨 BRAND COLORS
 const BRAND = {
   primary: '#072447',      // Dark blue
@@ -92,7 +99,11 @@ function App() {
     formData.append('file', file);
 
     try {
-      const response = await axios.post(`${API_URL}/upload`, formData);
+      const response = await axios.post(`${API_URL}/upload`, formData, {
+        headers: {
+          'Authorization': authHeader
+        }
+      });
       setResult(response.data.data);
       setSelectedSeverity(null);
       setSelectedCategory(null);
@@ -114,6 +125,10 @@ function App() {
       const response = await axios.post(`${API_URL}/check-url`, {
         url: url.trim(),
         content_type: 'web'
+      }, {
+        headers: {
+          'Authorization': authHeader
+        }
       });
 
       if (response.data.success) {
