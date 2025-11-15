@@ -132,6 +132,9 @@ function App() {
       });
 
       if (response.data.success) {
+        console.log('✅ URL Check Response:', response.data.data);
+        console.log('🔍 SEO Metadata from API:', response.data.data.seoMetadata);
+        console.log('📄 File Type:', response.data.data.fileType);
         setResult(response.data.data);
         setSelectedSeverity(null);
         setSelectedCategory(null);
@@ -807,6 +810,11 @@ function App() {
             )}
 
             {/* SEO Metadata - Only for URL checks */}
+            {console.log('🔎 Checking SEO display condition:', {
+              fileType: result.fileType,
+              hasSeoMetadata: !!result.seoMetadata,
+              seoMetadata: result.seoMetadata
+            })}
             {result.fileType === 'url' && result.seoMetadata && (
               <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
                 <div className="flex items-center justify-between mb-6">
